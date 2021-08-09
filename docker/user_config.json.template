@@ -1,0 +1,10 @@
+{
+  "extra_cmdline": {
+    "vid": "${USERCONFIG_VID}",
+    "pid": "${USERCONFIG_PID}",
+    "sn": "${USERCONFIG_SN}",
+    "mac1": "${USERCONFIG_MAC1}"
+  },
+  "synoinfo": {},
+  "ramdisk_copy": {}
+}
