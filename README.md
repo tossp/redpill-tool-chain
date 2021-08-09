@@ -1,40 +1,37 @@
 # RedPill Tool Chain
 
-THX @haydibe
+这是一个测试项目，可能会有不可预测的事情发生（比如：毁损数据、烧毁硬件等等），请**谨慎使用**。
 
-# What is this?
+[English](README_EN.md "English")
 
-The redpill tool chain docker image builder is updated to v0.4:
+感谢 @haydibe 提供 RedPill Tool Chain
 
-- proper DSM7 support for apollolake (thnx @jumkey)
-- switched from kernel sources based build to toolkit dev based builds for DSM6.2.4 and DSM7.0 (thnx @jumkey) 
-- make targets for bromolow and apollolake merged: platform and version must be configure in the Makefile now
-- image is ~720-780MB instead of ~1.200-1.500MB now
+# 关于项目?
 
- 
-Note: since toolkit dev lacks the required sources for fs/proc, they are taken from the extracted DSM6.2.4 kernel sources.
+- 为apollolake提供适当的DSM7支持 (thnx @jumkey)
+- 针对DSM6.2.4和DSM7.0从基于内核源代码的构建切换到基于工具包开发人员的构建 (thnx @jumkey)
 
-          The build requires the sources for this single folder, but does not use the kernel source to build the redpill.ko module. 
+> PS: 由于toolkit dev缺少fs/proc所需的源代码，因此它们取自提取的DSM6.2.4内核源代码。
+构建需要此单个文件夹的源代码，但不使用内核源代码构建redpill.ko模块。 
 
- 
+如果您发现工具链的构建方式有问题，或者有改进的想法：请让我知道。
 
-If you see something is wrong in how the toolchain is build or have ideas how to make it better: please let me know.
+对于所有其他问题：请向社区提出——我知道的并不比其他人多。
 
-For every other problem: please address it to the community - I don't know more than others do. 
+# 如何使用?
 
-Note#2: before someone asks: I haven't managed a successfull installation/migration with the created bootloader so far. I am testing exclusivly on ESXi 6.7. The migration always stops at 56% and bails out with error 13.
+1. (在宿主机中) 复制`user_config.simple.json`为`user_config.json`
+1. (在宿主机中) 调整`Makefile`文件配置的配置项 `TARGET_PLATFORM` (默认: apollolake) 和 `TARGET_VERSION` (默认: 7.0 - 将会构建 7.0-41890)
+1. (在宿主机中) 显示构建镜像命令: `make build_image`,复制、调整回显并执行
+1. (在宿主机中) 显示启动容器命令: `make run_container`,复制、调整回显并执行
+1. (在容器中)   编译`redpill.ko`模块和生成启动镜像: `make build_all`
 
- 
-# How to use it?
+`make build_all`运行结束之后，将会在宿主机的`./image`文件夹中生成 RedPill引导镜像。
 
-- (on host) configure the Makefile and configure TARGET_PLATFORM (default: bromolow) and TARGET_VERSION (default: 6.2 - will build 6.2.4)
-- (on host) create your own user_config.json or edit the USERCONFIG_* variables in the Makefile
-- (on host) build image: make build_image
-- (on host) run container: make  run_container
-- (in container) build redpill.ko module and redpill bootloader image: make build_all
+依赖关系: `make` 和 `docker`
 
-After running `make build_all` the created redpill bootloader image will be present in the ./image folder on the host.
- 
-Tested with hosts: Ubuntu 18.04 VM, Ubuntu 20.04 WSL2 and XPE  (the make binary to build on Synology/XPE can be found here)
-
-Dependencies: make and docker
+# 其他说明
+为了方便我自己
+- `docker/Dockerfile` 中补入了阿里云镜像
+- 如果是网络不好可以在`make build_image`之前执行`make build_download`
+- `make run_container`调整为回显需要的docker命令

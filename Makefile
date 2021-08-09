@@ -9,8 +9,7 @@ SHELL := bash
 # Shared arguments for image build and container run
 ####################################################
 
-export DOCKER_BASE_IMAGE                 := debian:8
-#export DOCKER_BASE_IMAGE                 := ubuntu:16.04
+export DOCKER_BASE_IMAGE                 := ubuntu:20.04
 export DOCKER_IMAGE_NAME                 := redpill-tool-chain
 
 # The USERCONFIG_ variables MUST be configured with valid values - otherwise the redpill image will not boot!
@@ -20,23 +19,23 @@ export USERCONFIG_SN                     := <fill me>
 export USERCONFIG_MAC1                   := <fill me>
 
 # Modify parameters to build either bromolow or apollolake with version 6.2.4-25556 or 7.0-41890
-export TARGET_PLATFORM                   := bromolow
-#export TARGET_PLATFORM                   := apollolake
-export TARGET_VERSION                    := 6.2
-#export TARGET_VERSION                    := 7.0
+# export TARGET_PLATFORM                   := bromolow
+export TARGET_PLATFORM                   := apollolake
+# export TARGET_VERSION                    := 6.2
+export TARGET_VERSION                    := 7.0
 
 export BUILD_REDPILL_LOADER_VERSION      := $(shell [ "$(TARGET_VERSION)" == "6.2" ] && echo "6.2.4-25556" || echo "7.0-41890")
 
 ####################################################
 # Arguments for container run
 ####################################################
-
+ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 # mount-bind host folder with absolute path into redpill-load cache folder
 # will not work with relativfe path! If single name is used, a docker volume will be created!
-export REDPILL_LOAD_CACHE                := $(PWD)/cache
+export REDPILL_LOAD_CACHE                := $(ROOT_DIR)/cache
 
 # mount bind hots folder with absolute path into redpill load images folder
-export REDPILL_LOAD_IMAGES               := $(PWD)/images
+export REDPILL_LOAD_IMAGES               := $(ROOT_DIR)/images
 
 ####################################################
 # build image downloads and build argument
@@ -86,11 +85,14 @@ export REDPILL_LOAD_BRANCH                          := $(shell [ "$(TARGET_VERSI
 all:
 	$(call printTargets)
 
-.PHONY: build_image
-build_image:
+.PHONY: build_download
+build_download:
 	$(call downloadFromUrlIfNotExists,$(call getToolChainFilename),$(call getToolChainDownloadURL),$(TARGET_PLATFORM) toolchain)
 	$(call downloadFromUrlIfNotExists,$(call getKernelFilename),$(call getKernelDownloadURL),$(TARGET_PLATFORM) kernel)
 	$(call downloadFromUrlIfNotExists,$(TOOLKIT_DEV_FILENAME),$(TOOLKIT_DEV_DOWNLOAD_URL),$(TARGET_PLATFORM) $(TAGET_VERSION) Toolkit (includes kernel modules))
+
+.PHONY: build_image
+build_image: build_download
 	$(call buildImage,$(TARGET_PLATFORM),$(call getToolChainFilename),$(call getKernelFilename),$(TOOLKIT_DEV_FILENAME))
 
 .PHONY: run_container
@@ -110,8 +112,8 @@ endef
 ## @param 3 Message to display
 define downloadFromUrlIfNotExists
 	@if [ ! -e $(DOWNLOAD_FOLDER)/$(1) ]; then \
-		echo "Downloading $(3)"; \
-		curl --progress-bar --location '$(2)' --output $(DOWNLOAD_FOLDER)/$(1); \
+		echo "Downloading $(3) $(2) $(1)"; \
+		curl --location '$(2)' --output $(DOWNLOAD_FOLDER)/$(1); \
 	fi
 endef
 
@@ -121,7 +123,7 @@ endef
 ## @param 3 Toolkit Filename to add to the image
 ## @param 2 Toolchain Filename to add to the image
 define buildImage
-	@DOCKER_BUILDKIT=1 docker build --file docker/Dockerfile --force-rm  --pull \
+	@echo 'DOCKER_BUILDKIT=1 docker build --file docker/Dockerfile --force-rm  --pull \
 		--build-arg DOCKER_BASE_IMAGE=$(DOCKER_BASE_IMAGE) \
 		--build-arg TOOLCHAIN_FILENAME="$(2)" \
 		--build-arg KERNEL_FILENAME="$(3)" \
@@ -137,12 +139,12 @@ define buildImage
 		--build-arg USERCONFIG_MAC1="$(USERCONFIG_MAC1)" \
 		--build-arg TARGET_PLATFORM="$(TARGET_PLATFORM)" \
 		--build-arg TARGET_VERSION="$(TARGET_VERSION)" \
-		-t $(DOCKER_IMAGE_NAME):$(TARGET_PLATFORM)-$(TARGET_VERSION) ./docker
+		-t $(DOCKER_IMAGE_NAME):$(TARGET_PLATFORM)-$(TARGET_VERSION) ./docker'
 endef
 
 ## Run docker container and mount cache volume, image bind-mount and if present a user_config.json file
 define runContainer
-	@docker run -ti --rm --privileged -v /dev:/dev \
+	@echo 'docker run -ti --rm --privileged -v /dev:/dev \
 		-v $(REDPILL_LOAD_CACHE):/opt/redpill-load/cache \
 		-v $(REDPILL_LOAD_IMAGES):/opt/redpill-load/images \
 		$(shell [ -e user_config.json ] && echo "-v $(PWD)/user_config.json:/opt/redpill-load/user_config.json") \
@@ -151,7 +153,7 @@ define runContainer
 		-e USERCONFIG_SN="$(USERCONFIG_SN)" \
 		-e USERCONFIG_MAC1="$(USERCONFIG_MAC1)" \
 		-e BUILD_REDPILL_LOADER_VERSION=$(BUILD_REDPILL_LOADER_VERSION) \
-		$(DOCKER_IMAGE_NAME):$(TARGET_PLATFORM)-$(TARGET_VERSION) bash
+		$(DOCKER_IMAGE_NAME):$(TARGET_PLATFORM)-$(TARGET_VERSION) bash'
 endef
 
 define getToolChainFilename
