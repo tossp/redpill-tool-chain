@@ -30,8 +30,8 @@ export BUILD_REDPILL_LOADER_VERSION      := $(shell [ "$(TARGET_VERSION)" == "6.
 # Arguments for container run
 ####################################################
 
-# ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-ROOT_DIR:='/volume1/homes/zh/app/redpill-tool-chain'
+ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+# ROOT_DIR:='/volume1/homes/zh/app/redpill-tool-chain'
 
 # mount-bind host folder with absolute path into redpill-load cache folder
 # will not work with relativfe path! If single name is used, a docker volume will be created!
