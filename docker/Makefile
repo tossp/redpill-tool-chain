@@ -21,7 +21,7 @@ export BUILD_REDPILL_LOADER_VERSION := ${BUILD_REDPILL_LOADER_VERSION}
 .PHONY: all
 all:
 	@echo "Possible Targets:"
-	@less Makefile |grep .PHONY[:] |cut -f2 -d ' ' |xargs -n1 echo " - " |grep -v " -  all"
+	@cat Makefile |grep .PHONY[:] |cut -f2 -d ' ' |xargs -n1 echo " - " |grep -v " -  all"
 
 .PHONY: build_redpill_lkm
 build_redpill_lkm:

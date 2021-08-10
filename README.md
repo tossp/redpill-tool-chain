@@ -22,16 +22,15 @@
 
 1. (在宿主机中) 复制`user_config.simple.json`为`user_config.json`
 1. (在宿主机中) 调整`Makefile`文件配置的配置项 `TARGET_PLATFORM` (默认: apollolake) 和 `TARGET_VERSION` (默认: 7.0 - 将会构建 7.0-41890)
-1. (在宿主机中) 显示构建镜像命令: `make build_image`,复制、调整回显并执行
-1. (在宿主机中) 显示启动容器命令: `make run_container`,复制、调整回显并执行
-1. (在容器中)   编译`redpill.ko`模块和生成启动镜像: `make build_all`
+1. (在宿主机中) 构建编译镜像: `make build_image`
+1. (在宿主机中) 启动容器构建引导: `make build_boot`
 
-`make build_all`运行结束之后，将会在宿主机的`./image`文件夹中生成 RedPill引导镜像。
+`make build_boot`运行结束之后，将会在宿主机的`./image`文件夹中生成 RedPill引导镜像。
 
-依赖关系: `make` 和 `docker`
+依赖: `make` 和 `docker`
 
 # 其他说明
 为了方便我自己
 - `docker/Dockerfile` 中补入了阿里云镜像
 - 如果是网络不好可以在`make build_image`之前执行`make build_download`
-- `make run_container`调整为回显需要的docker命令
+- `make run_container`自定义引导构建过程

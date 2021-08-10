@@ -29,7 +29,10 @@ export BUILD_REDPILL_LOADER_VERSION      := $(shell [ "$(TARGET_VERSION)" == "6.
 ####################################################
 # Arguments for container run
 ####################################################
-ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
+# ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+ROOT_DIR:='/volume1/homes/zh/app/redpill-tool-chain'
+
 # mount-bind host folder with absolute path into redpill-load cache folder
 # will not work with relativfe path! If single name is used, a docker volume will be created!
 export REDPILL_LOAD_CACHE                := $(ROOT_DIR)/cache
@@ -95,6 +98,10 @@ build_download:
 build_image: build_download
 	$(call buildImage,$(TARGET_PLATFORM),$(call getToolChainFilename),$(call getKernelFilename),$(TOOLKIT_DEV_FILENAME))
 
+.PHONY: build_boot
+build_boot:
+	$(call runContainer,$(TARGET_PLATFORM),'-c','make build_all')
+
 .PHONY: run_container
 run_container:
 	$(call runContainer,$(TARGET_PLATFORM))
@@ -102,7 +109,7 @@ run_container:
 ## Print makefile PHONY targets to the console
 define printTargets
 	@echo "Possible Targets:"
-	@less Makefile |grep .PHONY[:] |cut -f2 -d ' ' |xargs -n1 echo " - " |grep -v " -  all"
+	@cat Makefile |grep .PHONY[:] |cut -f2 -d ' ' |xargs -n1 echo " - " |grep -v " -  all"
 endef
 
 ## Download binaries
@@ -123,7 +130,7 @@ endef
 ## @param 3 Toolkit Filename to add to the image
 ## @param 2 Toolchain Filename to add to the image
 define buildImage
-	@echo 'DOCKER_BUILDKIT=1 docker build --file docker/Dockerfile --force-rm  --pull \
+	@DOCKER_BUILDKIT=1 docker build --file docker/Dockerfile --force-rm  --pull \
 		--build-arg DOCKER_BASE_IMAGE=$(DOCKER_BASE_IMAGE) \
 		--build-arg TOOLCHAIN_FILENAME="$(2)" \
 		--build-arg KERNEL_FILENAME="$(3)" \
@@ -139,21 +146,21 @@ define buildImage
 		--build-arg USERCONFIG_MAC1="$(USERCONFIG_MAC1)" \
 		--build-arg TARGET_PLATFORM="$(TARGET_PLATFORM)" \
 		--build-arg TARGET_VERSION="$(TARGET_VERSION)" \
-		-t $(DOCKER_IMAGE_NAME):$(TARGET_PLATFORM)-$(TARGET_VERSION) ./docker'
+		-t $(DOCKER_IMAGE_NAME):$(TARGET_PLATFORM)-$(TARGET_VERSION) ./docker
 endef
 
 ## Run docker container and mount cache volume, image bind-mount and if present a user_config.json file
 define runContainer
-	@echo 'docker run -ti --rm --privileged -v /dev:/dev \
+	@docker run -ti --rm --privileged -v /dev:/dev \
 		-v $(REDPILL_LOAD_CACHE):/opt/redpill-load/cache \
 		-v $(REDPILL_LOAD_IMAGES):/opt/redpill-load/images \
-		$(shell [ -e user_config.json ] && echo "-v $(PWD)/user_config.json:/opt/redpill-load/user_config.json") \
+		$(shell [ -e user_config.json ] && echo "-v $(ROOT_DIR)/user_config.json:/opt/redpill-load/user_config.json") \
 		-e USERCONFIG_VID="$(USERCONFIG_VID)" \
 		-e USERCONFIG_PID="$(USERCONFIG_PID)" \
 		-e USERCONFIG_SN="$(USERCONFIG_SN)" \
 		-e USERCONFIG_MAC1="$(USERCONFIG_MAC1)" \
 		-e BUILD_REDPILL_LOADER_VERSION=$(BUILD_REDPILL_LOADER_VERSION) \
-		$(DOCKER_IMAGE_NAME):$(TARGET_PLATFORM)-$(TARGET_VERSION) bash'
+		$(DOCKER_IMAGE_NAME):$(TARGET_PLATFORM)-$(TARGET_VERSION) bash ${2} ${3}
 endef
 
 define getToolChainFilename

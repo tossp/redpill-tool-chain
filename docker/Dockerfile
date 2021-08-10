@@ -24,11 +24,11 @@ ADD downloads/${TOOLCHAIN_FILENAME} /opt/
 
 ARG REDPILL_LKM_REPO=https://github.com/RedPill-TTG/redpill-lkm.git
 ARG REDPILL_LKM_BRANCH=master
-RUN git clone ${REDPILL_LKM_REPO} -b ${REDPILL_LKM_BRANCH} /opt/redpill-lkm
+RUN git clone --depth 1 ${REDPILL_LKM_REPO} -b ${REDPILL_LKM_BRANCH} /opt/redpill-lkm
 
 ARG REDPILL_LOAD=https://github.com/RedPill-TTG/redpill-load.git
 ARG REDPILL_LOAD_BRANCH=master
-RUN git clone ${REDPILL_LOAD} -b ${REDPILL_LOAD_BRANCH} /opt/redpill-load
+RUN git clone --depth 1 ${REDPILL_LOAD} -b ${REDPILL_LOAD_BRANCH} /opt/redpill-load
 
 ARG TARGET_VERSION
 ARG TARGET_PLATFORM
