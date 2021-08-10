@@ -102,6 +102,10 @@ build_image: build_download
 build_boot:
 	$(call runContainer,$(TARGET_PLATFORM),'-c','make build_all')
 
+.PHONY: build_boot_debug
+build_boot_debug:
+	$(call runContainer,$(TARGET_PLATFORM),'-c','BRP_DEBUG=1 make build_all')
+
 .PHONY: run_container
 run_container:
 	$(call runContainer,$(TARGET_PLATFORM))

@@ -28,10 +28,9 @@ For every other problem: please address it to the community - I don't know more 
 1. (on host) configure the Makefile and configure TARGET_PLATFORM (default: bromolow) and TARGET_VERSION (default: 6.2 - will build 6.2.4)
 1. (on host) create your own user_config.json or edit the USERCONFIG_* variables in the Makefile
 1. (on host) build image: make build_image
-1. (on host) run container: make  run_container
-1. (in container) build redpill.ko module and redpill bootloader image: make build_all
+1. (on host) build boot image: make build_boot
 
-After running `make build_all` the created redpill bootloader image will be present in the ./image folder on the host.
+After running `make build_boot` the created redpill bootloader image will be present in the ./image folder on the host.
  
 Tested with hosts: Ubuntu 18.04 VM, Ubuntu 20.04 WSL2 and XPE  (the make binary to build on Synology/XPE can be found here)
 
