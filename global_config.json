@@ -8,7 +8,7 @@
         {
             "id": "bromolow-6.2.4-25556",
             "platform_version": "bromolow-6.2.4-25556",
-            "docker_base_image": "debian:8-slim",
+            "docker_base_image": "ubuntu:20.04",
             "compile_with": "kernel",
             "download_urls": {
                 "kernel": "https://sourceforge.net/projects/dsgpl/files/Synology%20NAS%20GPL%20Source/25426branch/bromolow-source/linux-3.10.x.txz/download",
@@ -26,7 +26,7 @@
         {
             "id": "bromolow-7.0-41222",
             "platform_version": "bromolow-7.0-41222",
-            "docker_base_image": "debian:8-slim",
+            "docker_base_image": "ubuntu:20.04",
             "compile_with": "toolkit_dev",
             "download_urls": {
                 "kernel": "https://sourceforge.net/projects/dsgpl/files/Synology%20NAS%20GPL%20Source/25426branch/bromolow-source/linux-3.10.x.txz/download",
@@ -44,7 +44,7 @@
         {
             "id": "apollolake-6.2.4-25556",
             "platform_version": "apollolake-6.2.4-25556",
-            "docker_base_image": "debian:8-slim",
+            "docker_base_image": "ubuntu:20.04",
             "compile_with": "kernel",
             "download_urls": {
                 "kernel": "https://sourceforge.net/projects/dsgpl/files/Synology%20NAS%20GPL%20Source/25426branch/apollolake-source/linux-4.4.x.txz/download",
@@ -62,7 +62,7 @@
         {
             "id": "apollolake-7.0-41890",
             "platform_version": "apollolake-7.0-41890",
-            "docker_base_image": "debian:10-slim",
+            "docker_base_image": "ubuntu:20.04",
             "compile_with": "toolkit_dev",
             "download_urls": {
                 "kernel": "https://sourceforge.net/projects/dsgpl/files/Synology%20NAS%20GPL%20Source/25426branch/apollolake-source/linux-4.4.x.txz/download",
