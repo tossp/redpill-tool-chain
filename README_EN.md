@@ -2,36 +2,26 @@
 
 [中文说明](README.md "English")
 THX @haydibe
+# Inofficial redpill toolchain image builder
+- Creates a OCI Container (~= Docker) image based tool chain.
+- Takes care of downloading (and caching) the required sources to compile redpill.ko and the required os packages that the build process depends on.
+- Caches .pat downloads inside the container on the host.
 
-# What is this?
+## Changes
+- Migrated from Make to Bash (requires `jq`, instead of `make` now )
+- Removed Synology toolchain, the tool chain now consists  of debian packages
+- Configuration is now done in the JSON file `global_config.json`
+- The configuration allows to specify own configurations -> just copy a block underneath the `building_configs` block and make sure it has a unique value for the id attribute. The id is used what actualy is used to determine the <platform_version>.
 
-The redpill tool chain docker image builder is updated to v0.4:
+## Usage
 
-- proper DSM7 support for apollolake (thnx @jumkey)
-- switched from kernel sources based build to toolkit dev based builds for DSM6.2.4 and DSM7.0 (thnx @jumkey) 
-- make targets for bromolow and apollolake merged: platform and version must be configure in the Makefile now
-- image is ~720-780MB instead of ~1.200-1.500MB now
+1. Create `user_config.json` according https://github.com/RedPill-TTG/redpill-load
+2. Build the image for the platform and version you want:
+   `redpill_tool_chain.sh build <platform_version>`
+3. Run the image for the platform and version you want:
+   `redpill_tool_chain.sh run <platform_version>`
+4. Inside the container, run `make build_all` to build the loader for the platform_version
 
- 
-> PS: since toolkit dev lacks the required sources for fs/proc, they are taken from the extracted DSM6.2.4 kernel sources.
-The build requires the sources for this single folder, but does not use the kernel source to build the redpill.ko module. 
+Note: run `redpill_tool_chain.sh build` to get the list of supported <platform_version>
 
-If you see something is wrong in how the toolchain is build or have ideas how to make it better: please let me know.
-
-For every other problem: please address it to the community - I don't know more than others do. 
-
-> PS2: before someone asks: I haven't managed a successfull installation/migration with the created bootloader so far. I am testing exclusivly on ESXi 6.7. The migration always stops at 56% and bails out with error 13.
-
- 
-# How to use it?
-
-1. (on host) configure the Makefile and configure TARGET_PLATFORM (default: bromolow) and TARGET_VERSION (default: 6.2 - will build 6.2.4)
-1. (on host) create your own user_config.json or edit the USERCONFIG_* variables in the Makefile
-1. (on host) build image: make build_image
-1. (on host) build boot image: make build_boot
-
-After running `make build_boot` the created redpill bootloader image will be present in the ./image folder on the host.
- 
-Tested with hosts: Ubuntu 18.04 VM, Ubuntu 20.04 WSL2 and XPE  (the make binary to build on Synology/XPE can be found here)
-
-Dependencies: make and docker
+After set 4. the redpill load image should be build and can be found in the host folder "images".
