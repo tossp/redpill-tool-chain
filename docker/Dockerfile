@@ -53,15 +53,9 @@ RUN if [ "apollolake" = "$TARGET_PLATFORM" ]; then echo '+' > ${LINUX_SRC}/.scmv
 
 WORKDIR "/opt"
 
-COPY Makefile user_config.json.template /opt/
-ARG USERCONFIG_VID=<fill me>
-ARG USERCONFIG_PID=<fill me>
-ARG USERCONFIG_SN=<fill me>
-ARG USERCONFIG_MAC1=<fill me>
+COPY Makefile /opt/
 
-ENV USERCONFIG_VID=${USERCONFIG_VID} \
-    USERCONFIG_PID=${USERCONFIG_PID} \
-    USERCONFIG_SN=${USERCONFIG_SN} \
-    USERCONFIG_MAC1=${USERCONFIG_MAC1}
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-CMD ["bash"]
+ENTRYPOINT [ "/entrypoint.sh" ]

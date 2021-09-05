@@ -1,10 +1,5 @@
-##!/usr/bin/env bash
+#!/usr/bin/env bash
 set -eu
-
-USERCONFIG_VID=changeme
-USERCONFIG_PID=changeme
-USERCONFIG_SN=changeme
-USERCONFIG_MAC1=changeme
 
 function readConfig() {
     cat global_config.json
@@ -18,7 +13,7 @@ function getValueByJsonPath(){
 
 function buildImage(){
     [ "${USE_BUILDKIT}" == "true" ] && export DOCKER_BUILDKIT=1
-    docker build --file docker/Dockerfile --force-rm  --pull \
+    docker build --file docker/Dockerfile --no-cache --force-rm  --pull \
         --build-arg DOCKER_BASE_IMAGE="${DOCKER_BASE_IMAGE}" \
         --build-arg COMPILE_WITH="${COMPILE_WITH}" \
         --build-arg EXTRACTED_KSRC="${EXTRACTED_KSRC}" \
@@ -31,29 +26,33 @@ function buildImage(){
         --build-arg TARGET_VERSION="${TARGET_VERSION}" \
         --build-arg DSM_VERSION="${DSM_VERSION}" \
         --build-arg TARGET_REVISION="${TARGET_REVISION}" \
-        --build-arg USERCONFIG_VID="${USERCONFIG_VID}" \
-        --build-arg USERCONFIG_PID="${USERCONFIG_PID}" \
-        --build-arg USERCONFIG_SN="${USERCONFIG_SN}" \
-        --build-arg USERCONFIG_MAC1="${USERCONFIG_MAC1}" \
-        -t ${DOCKER_IMAGE_NAME}:${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} ./docker
+        --tag ${DOCKER_IMAGE_NAME}:${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} ./docker
     }
 
 function runContainer(){
-    config=$( [ -e user_config.json ] && echo "-v ${PWD}/user_config.json:/opt/redpill-load/user_config.json")
-    final_cmd="docker run -ti --rm --privileged -v /dev:/dev \
-        -v ${REDPILL_LOAD_CACHE}:/opt/redpill-load/cache \
-        -v ${REDPILL_LOAD_IMAGES}:/opt/redpill-load/images \
-        $config \
-        -e USERCONFIG_VID="${USERCONFIG_VID}" \
-        -e USERCONFIG_PID="${USERCONFIG_PID}" \
-        -e USERCONFIG_SN="${USERCONFIG_SN}" \
-        -e USERCONFIG_MAC1="${USERCONFIG_MAC1}" \
-        -e TARGET_PLATFORM="${TARGET_PLATFORM}" \
-        -e TARGET_VERSION="${TARGET_VERSION}" \
-        -e DSM_VERSION="${DSM_VERSION}" \
-        -e REVISION="${TARGET_REVISION}" \
-        ${DOCKER_IMAGE_NAME}:${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} bash $@"
-    eval ${final_cmd}
+    local CMD=${1}
+    if [ ! -e $(realpath "${USER_CONFIG_JSON}") ]; then
+        echo "user config does not exist: ${USER_CONFIG_JSON}"
+        exit 1
+    fi
+    if [[ "${LOCAL_RP_LOAD_USE}" == "true" && ! -e $(realpath "${LOCAL_RP_LOAD_PATH}") ]]; then
+        echo "Local redpill-load path does not exist: ${LOCAL_RP_LOAD_PATH}"
+        exit 1
+    fi
+    docker run --privileged --rm  $( [ "${CMD}" == "run" ] && echo " --interactive") --tty \
+        --name redpill-tool-chain \
+        --hostname redpill-tool-chain \
+        --volume /dev:/dev \
+        $( [ "${LOCAL_RP_LOAD_USE}" == "true" ] && echo "--volume $(realpath ${LOCAL_RP_LOAD_PATH}):/opt/redpill-load") \
+        $( [ -e "${USER_CONFIG_JSON}" ] && echo "--volume $(realpath ${USER_CONFIG_JSON}):/opt/redpill-load/user_config.json") \
+        --volume ${REDPILL_LOAD_CACHE}:/opt/redpill-load/cache \
+        --volume ${REDPILL_LOAD_IMAGES}:/opt/redpill-load/images \
+        --env TARGET_PLATFORM="${TARGET_PLATFORM}" \
+        --env TARGET_VERSION="${TARGET_VERSION}" \
+        --env DSM_VERSION="${DSM_VERSION}" \
+        --env REVISION="${TARGET_REVISION}" \
+        --env LOCAL_RP_LOAD_USE="${LOCAL_RP_LOAD_USE}" \
+        ${DOCKER_IMAGE_NAME}:${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} $( [ "${CMD}" == "run" ] && echo "/bin/bash")
 }
 
 function downloadFromUrlIfNotExists(){
@@ -70,11 +69,21 @@ function showHelp(){
 cat << EOF
 Usage: ${0} <action> <platform version>
 
-Actions: build run img debug
+Actions: build, auto, run
+
+- build:    Build the toolchain image for the specified platform version.
+
+- auto:     Starts the toolchain container using the previosuly build toolchain image for the specified platform.
+            Updates redpill sources and builds the bootloader image automaticaly. Will end the container once done.
+
+- run:      Starts the toolchain container using the previously built toolchain image for the specified platform.
+            Interactive Bash terminal.
 
 Available platform versions:
 ---------------------
 ${AVAILABLE_IDS}
+
+Check global_settings.json for settings.
 EOF
 }
 
@@ -111,10 +120,13 @@ fi
 USE_BUILDKIT=$(getValueByJsonPath ".docker.use_buildkit" "${CONFIG}")
 DOCKER_IMAGE_NAME=$(getValueByJsonPath ".docker.image_name" "${CONFIG}")
 DOWNLOAD_FOLDER=$(getValueByJsonPath ".docker.download_folder" "${CONFIG}")
+LOCAL_RP_LOAD_USE=$(getValueByJsonPath ".docker.local_rp_load_use" "${CONFIG}")
+LOCAL_RP_LOAD_PATH=$(getValueByJsonPath ".docker.local_rp_load_path" "${CONFIG}")
 TARGET_PLATFORM=$(getValueByJsonPath ".platform_version | split(\"-\")[0]" "${BUILD_CONFIG}")
 TARGET_VERSION=$(getValueByJsonPath ".platform_version | split(\"-\")[1]" "${BUILD_CONFIG}")
 DSM_VERSION=$(getValueByJsonPath ".platform_version | split(\"-\")[1][0:3]" "${BUILD_CONFIG}")
 TARGET_REVISION=$(getValueByJsonPath ".platform_version | split(\"-\")[2]" "${BUILD_CONFIG}")
+USER_CONFIG_JSON=$(getValueByJsonPath ".user_config_json" "${BUILD_CONFIG}")
 DOCKER_BASE_IMAGE=$(getValueByJsonPath ".docker_base_image" "${BUILD_CONFIG}")
 KERNEL_DOWNLOAD_URL=$(getValueByJsonPath ".download_urls.kernel" "${BUILD_CONFIG}")
 COMPILE_WITH=$(getValueByJsonPath ".compile_with" "${BUILD_CONFIG}")
@@ -136,11 +148,9 @@ case "${ACTION}" in
             downloadFromUrlIfNotExists "${TOOLKIT_DEV_DOWNLOAD_URL}" "${DOWNLOAD_FOLDER}/${TOOLKIT_DEV_FILENAME}" "Toolkit Dev"
             buildImage
             ;;
-    img)   runContainer -c "'make build_all'"
+    run)    runContainer "run"
             ;;
-    debug)  runContainer -c "'BRP_DEBUG=1 make build_all'"
-            ;;
-    run)    runContainer
+    auto)  runContainer "auto"
             ;;
     *)      if [ ! -z ${ACTION} ];then
                 echo "Error: action ${ACTION} does not exist"
