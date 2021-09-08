@@ -13,7 +13,7 @@ function getValueByJsonPath(){
 
 function buildImage(){
     [ "${USE_BUILDKIT}" == "true" ] && export DOCKER_BUILDKIT=1
-    docker build --file docker/Dockerfile --no-cache --force-rm  --pull \
+    docker build --file docker/Dockerfile --force-rm  --pull \
         --build-arg DOCKER_BASE_IMAGE="${DOCKER_BASE_IMAGE}" \
         --build-arg COMPILE_WITH="${COMPILE_WITH}" \
         --build-arg EXTRACTED_KSRC="${EXTRACTED_KSRC}" \
@@ -27,7 +27,29 @@ function buildImage(){
         --build-arg DSM_VERSION="${DSM_VERSION}" \
         --build-arg TARGET_REVISION="${TARGET_REVISION}" \
         --tag ${DOCKER_IMAGE_NAME}:${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} ./docker
-    }
+}
+
+function clean(){
+    if [ "${AUTO_CLEAN}" != "true" ]; then
+        echo "---------- before clean --------------------------------------"
+        docker system df
+    fi
+    if [ "${ID}" == "all" ];then
+        OLD_IMAGES=$(docker image ls --filter label=redpill-tool-chain --filter dangling=true --quiet)
+        docker builder prune --filter label=redpill-tool-chain --force
+    else
+        OLD_IMAGES=$(docker image ls --filter label=redpill-tool-chain=${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} --filter dangling=true --quiet)
+        docker builder prune --filter label=redpill-tool-chain=${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} --force
+    fi
+
+    if [ ! -z "${OLD_IMAGES}" ]; then
+        docker image rm ${OLD_IMAGES}
+    fi
+    if [ "${AUTO_CLEAN}" != "true" ]; then
+        echo "---------- after clean ---------------------------------------"
+        docker system df
+    fi
+}
 
 function runContainer(){
     local CMD=${1}
@@ -69,7 +91,7 @@ function showHelp(){
 cat << EOF
 Usage: ${0} <action> <platform version>
 
-Actions: build, auto, run
+Actions: build, auto, run, clean
 
 - build:    Build the toolchain image for the specified platform version.
 
@@ -78,6 +100,9 @@ Actions: build, auto, run
 
 - run:      Starts the toolchain container using the previously built toolchain image for the specified platform.
             Interactive Bash terminal.
+
+- clean:    Removes old (=dangling) images and the build cache for a platform version.
+            Use `all` as platform version to remove images and build caches for all platform versions.
 
 Available platform versions:
 ---------------------
@@ -102,6 +127,7 @@ REDPILL_LOAD_IMAGES=${PWD}/images
 # parse paramters from config
 CONFIG=$(readConfig)
 AVAILABLE_IDS=$(getValueByJsonPath ".build_configs[].id" "${CONFIG}")
+AUTO_CLEAN=$(getValueByJsonPath ".docker.auto_clean" "${CONFIG}")
 
 if [ $# -lt 2 ]; then
     showHelp
@@ -110,47 +136,60 @@ fi
 
 ACTION=${1}
 ID=${2}
-BUILD_CONFIG=$(getValueByJsonPath ".build_configs[] | select(.id==\"${ID}\")" "${CONFIG}")
-if [ -z "${BUILD_CONFIG}" ];then
-    echo "Error: Platform version ${ID} not specified in global_config.json"
-    echo
-    showHelp
-    exit 1
-fi
-USE_BUILDKIT=$(getValueByJsonPath ".docker.use_buildkit" "${CONFIG}")
-DOCKER_IMAGE_NAME=$(getValueByJsonPath ".docker.image_name" "${CONFIG}")
-DOWNLOAD_FOLDER=$(getValueByJsonPath ".docker.download_folder" "${CONFIG}")
-LOCAL_RP_LOAD_USE=$(getValueByJsonPath ".docker.local_rp_load_use" "${CONFIG}")
-LOCAL_RP_LOAD_PATH=$(getValueByJsonPath ".docker.local_rp_load_path" "${CONFIG}")
-TARGET_PLATFORM=$(getValueByJsonPath ".platform_version | split(\"-\")[0]" "${BUILD_CONFIG}")
-TARGET_VERSION=$(getValueByJsonPath ".platform_version | split(\"-\")[1]" "${BUILD_CONFIG}")
-DSM_VERSION=$(getValueByJsonPath ".platform_version | split(\"-\")[1][0:3]" "${BUILD_CONFIG}")
-TARGET_REVISION=$(getValueByJsonPath ".platform_version | split(\"-\")[2]" "${BUILD_CONFIG}")
-USER_CONFIG_JSON=$(getValueByJsonPath ".user_config_json" "${BUILD_CONFIG}")
-DOCKER_BASE_IMAGE=$(getValueByJsonPath ".docker_base_image" "${BUILD_CONFIG}")
-KERNEL_DOWNLOAD_URL=$(getValueByJsonPath ".download_urls.kernel" "${BUILD_CONFIG}")
-COMPILE_WITH=$(getValueByJsonPath ".compile_with" "${BUILD_CONFIG}")
-KERNEL_FILENAME=$(getValueByJsonPath ".download_urls.kernel | split(\"/\")[] | select ( . | endswith(\".txz\"))" "${BUILD_CONFIG}")
-TOOLKIT_DEV_DOWNLOAD_URL=$(getValueByJsonPath ".download_urls.toolkit_dev" "${BUILD_CONFIG}")
-TOOLKIT_DEV_FILENAME=$(getValueByJsonPath ".download_urls.toolkit_dev | split(\"/\")[] | select ( . | endswith(\".txz\"))" "${BUILD_CONFIG}")
-REDPILL_LKM_REPO=$(getValueByJsonPath ".redpill_lkm.source_url" "${BUILD_CONFIG}")
-REDPILL_LKM_BRANCH=$(getValueByJsonPath ".redpill_lkm.branch" "${BUILD_CONFIG}")
-REDPILL_LOAD_REPO=$(getValueByJsonPath ".redpill_load.source_url" "${BUILD_CONFIG}")
-REDPILL_LOAD_BRANCH=$(getValueByJsonPath ".redpill_load.branch" "${BUILD_CONFIG}")
 
-EXTRACTED_KSRC='/linux*'
-if [ "${COMPILE_WITH}" == "toolkit_dev" ]; then
-    EXTRACTED_KSRC="/usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${DSM_VERSION}/build/"
+if [ "${ID}" != "all"  ]; then
+    BUILD_CONFIG=$(getValueByJsonPath ".build_configs[] | select(.id==\"${ID}\")" "${CONFIG}")
+    if [ -z "${BUILD_CONFIG}" ];then
+        echo "Error: Platform version ${ID} not specified in global_config.json"
+        echo
+        showHelp
+        exit 1
+    fi
+    USE_BUILDKIT=$(getValueByJsonPath ".docker.use_buildkit" "${CONFIG}")
+    DOCKER_IMAGE_NAME=$(getValueByJsonPath ".docker.image_name" "${CONFIG}")
+    DOWNLOAD_FOLDER=$(getValueByJsonPath ".docker.download_folder" "${CONFIG}")
+    LOCAL_RP_LOAD_USE=$(getValueByJsonPath ".docker.local_rp_load_use" "${CONFIG}")
+    LOCAL_RP_LOAD_PATH=$(getValueByJsonPath ".docker.local_rp_load_path" "${CONFIG}")
+    TARGET_PLATFORM=$(getValueByJsonPath ".platform_version | split(\"-\")[0]" "${BUILD_CONFIG}")
+    TARGET_VERSION=$(getValueByJsonPath ".platform_version | split(\"-\")[1]" "${BUILD_CONFIG}")
+    DSM_VERSION=$(getValueByJsonPath ".platform_version | split(\"-\")[1][0:3]" "${BUILD_CONFIG}")
+    TARGET_REVISION=$(getValueByJsonPath ".platform_version | split(\"-\")[2]" "${BUILD_CONFIG}")
+    USER_CONFIG_JSON=$(getValueByJsonPath ".user_config_json" "${BUILD_CONFIG}")
+    DOCKER_BASE_IMAGE=$(getValueByJsonPath ".docker_base_image" "${BUILD_CONFIG}")
+    KERNEL_DOWNLOAD_URL=$(getValueByJsonPath ".download_urls.kernel" "${BUILD_CONFIG}")
+    COMPILE_WITH=$(getValueByJsonPath ".compile_with" "${BUILD_CONFIG}")
+    KERNEL_FILENAME=$(getValueByJsonPath ".download_urls.kernel | split(\"/\")[] | select ( . | endswith(\".txz\"))" "${BUILD_CONFIG}")
+    TOOLKIT_DEV_DOWNLOAD_URL=$(getValueByJsonPath ".download_urls.toolkit_dev" "${BUILD_CONFIG}")
+    TOOLKIT_DEV_FILENAME=$(getValueByJsonPath ".download_urls.toolkit_dev | split(\"/\")[] | select ( . | endswith(\".txz\"))" "${BUILD_CONFIG}")
+    REDPILL_LKM_REPO=$(getValueByJsonPath ".redpill_lkm.source_url" "${BUILD_CONFIG}")
+    REDPILL_LKM_BRANCH=$(getValueByJsonPath ".redpill_lkm.branch" "${BUILD_CONFIG}")
+    REDPILL_LOAD_REPO=$(getValueByJsonPath ".redpill_load.source_url" "${BUILD_CONFIG}")
+    REDPILL_LOAD_BRANCH=$(getValueByJsonPath ".redpill_load.branch" "${BUILD_CONFIG}")
+
+    EXTRACTED_KSRC='/linux*'
+    if [ "${COMPILE_WITH}" == "toolkit_dev" ]; then
+        EXTRACTED_KSRC="/usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${DSM_VERSION}/build/"
+    fi
+else
+    if [ "${ACTION}" != "clean" ]; then
+            echo "All is not supported for action \"${ACTION}\""
+            exit 1
+    fi
 fi
 
 case "${ACTION}" in
     build)  downloadFromUrlIfNotExists "${KERNEL_DOWNLOAD_URL}" "${DOWNLOAD_FOLDER}/${KERNEL_FILENAME}" "Kernel"
             downloadFromUrlIfNotExists "${TOOLKIT_DEV_DOWNLOAD_URL}" "${DOWNLOAD_FOLDER}/${TOOLKIT_DEV_FILENAME}" "Toolkit Dev"
             buildImage
+            if [ "${AUTO_CLEAN}" == "true" ]; then
+                clean
+            fi
             ;;
     run)    runContainer "run"
             ;;
-    auto)  runContainer "auto"
+    auto)   runContainer "auto"
+            ;;
+    clean)  clean
             ;;
     *)      if [ ! -z ${ACTION} ];then
                 echo "Error: action ${ACTION} does not exist"
@@ -160,4 +199,3 @@ case "${ACTION}" in
             exit 1
             ;;
 esac
-

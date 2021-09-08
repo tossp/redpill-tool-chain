@@ -4,7 +4,8 @@
     "image_name": "redpill-tool-chain",
     "download_folder": "docker/downloads",
     "local_rp_load_use": "false",
-    "local_rp_load_path": "./redpill-load"
+    "local_rp_load_path": "./redpill-load",
+    "auto_clean": "false"
   },
   "build_configs": [
     {

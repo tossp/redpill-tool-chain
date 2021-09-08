@@ -8,11 +8,13 @@ ADD downloads/${KERNEL_SRC_FILENAME} /
 # tool chain image
 FROM ${DOCKER_BASE_IMAGE}
 
+LABEL redpill-tool-chain=${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION}
+
 ARG DEBIAN_FRONTEND=noninteractive
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak && \
     sed  -i "s/archive.ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list && \
     sed  -i "s/security.ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list && \
-    apt-get update && \    
+    apt-get update && \
     apt-get install --yes --no-install-recommends ca-certificates build-essential git libssl-dev curl cpio bspatch vim gettext bc bison flex dosfstools kmod jq && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
