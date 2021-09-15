@@ -11,9 +11,12 @@ THX @haydibe
 - Supports to bind a local redpill-load folder into the container (set `"docker.local_rp_load_use": "true"` and set `"docker.local_rp_load_path": "path/to/rp-load"`)
 - Supports to clean old image versions and the build cache per <platform_version> or for `all` of them at once.
 - Supports to auto clean old image versions and the build cache for the current build image, set `"docker.auto_clean":`to `"true"`.
+- Allows to configure if the build cache is used or not ("docker.use_build_cache")
+- Allows to specify if "clean all" should delete all or only orphaned images.
 ## Changes
-- `clean` now cleans the build cache as well
-- added `auto_clean` to clean old images and build cache after building the image.
+- fixed usage of label that determins the redpill-tool-chain images for clean up
+- add `"docker.use_build_cache": "false"` to global_settings.json
+- add `"docker.clean_images": "all"` to global_settings.json
 
 ## Usage
 
@@ -51,7 +54,7 @@ Actions: build, auto, run, clean
             Interactive Bash terminal.
 
 - clean:    Removes old (=dangling) images and the build cache for a platform version.
-            Use `all` as platform version to remove images and build caches for all platform versions.
+            Use `all` as platform version to remove images and build caches for all platform versions. `"docker.clean_images"`="all" only has affect with clean all.
 
 Available platform versions:
 ---------------------

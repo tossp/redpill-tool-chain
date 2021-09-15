@@ -5,7 +5,9 @@
     "download_folder": "docker/downloads",
     "local_rp_load_use": "false",
     "local_rp_load_path": "./redpill-load",
-    "auto_clean": "false"
+    "auto_clean": "false",
+    "use_build_cache": "false",
+    "clean_images": "all"
   },
   "build_configs": [
     {

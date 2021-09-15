@@ -8,8 +8,6 @@ ADD downloads/${KERNEL_SRC_FILENAME} /
 # tool chain image
 FROM ${DOCKER_BASE_IMAGE}
 
-LABEL redpill-tool-chain=${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION}
-
 ARG DEBIAN_FRONTEND=noninteractive
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak && \
     sed  -i "s/archive.ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list && \
@@ -34,6 +32,8 @@ ARG TARGET_VERSION
 ARG DSM_VERSION
 ARG COMPILE_WITH
 ARG TARGET_REVISION
+
+LABEL redpill-tool-chain=${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION}
 
 ENV ARCH=x86_64 \
     LINUX_SRC=${REDPILL_LKM_SRC}/${COMPILE_WITH}-${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} \

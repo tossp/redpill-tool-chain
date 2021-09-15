@@ -14,6 +14,7 @@ function getValueByJsonPath(){
 function buildImage(){
     [ "${USE_BUILDKIT}" == "true" ] && export DOCKER_BUILDKIT=1
     docker build --file docker/Dockerfile --force-rm  --pull \
+        $( [ "${USE_BUILD_CACHE}" == "false" ] && echo "--no-cache" ) \
         --build-arg DOCKER_BASE_IMAGE="${DOCKER_BASE_IMAGE}" \
         --build-arg COMPILE_WITH="${COMPILE_WITH}" \
         --build-arg EXTRACTED_KSRC="${EXTRACTED_KSRC}" \
@@ -35,10 +36,10 @@ function clean(){
         docker system df
     fi
     if [ "${ID}" == "all" ];then
-        OLD_IMAGES=$(docker image ls --filter label=redpill-tool-chain --filter dangling=true --quiet)
+        OLD_IMAGES=$(docker image ls --filter label=redpill-tool-chain --quiet $( [ "${CLEAN_IMAGES}" == "orphaned" ] && echo "--filter dangling=true"))
         docker builder prune --filter label=redpill-tool-chain --force
     else
-        OLD_IMAGES=$(docker image ls --filter label=redpill-tool-chain=${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} --filter dangling=true --quiet)
+        OLD_IMAGES=$(docker image ls --filter label=redpill-tool-chain=${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} --quiet --filter dangling=true)
         docker builder prune --filter label=redpill-tool-chain=${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} --force
     fi
 
@@ -128,6 +129,8 @@ REDPILL_LOAD_IMAGES=${PWD}/images
 CONFIG=$(readConfig)
 AVAILABLE_IDS=$(getValueByJsonPath ".build_configs[].id" "${CONFIG}")
 AUTO_CLEAN=$(getValueByJsonPath ".docker.auto_clean" "${CONFIG}")
+USE_BUILD_CACHE=$(getValueByJsonPath ".docker.use_build_cache" "${CONFIG}")
+CLEAN_IMAGES=$(getValueByJsonPath ".docker.clean_images" "${CONFIG}")
 
 if [ $# -lt 2 ]; then
     showHelp
