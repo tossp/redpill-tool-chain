@@ -20,13 +20,13 @@
 
 # 如何使用?
 
-1. 复制`user_config.simple.json`为`user_config.json`
+1. 编辑`<platform>_user_config.json`比如 918+ 就编辑 `apollolake_user_config.json` 文件
 1. 为你想要的平台和版本构建编译镜像: 
    比如 `redpill_tool_chain.sh build apollolake-7.0-41890`
 1. 为你想要的平台和版本构建引导: 
-   比如 `redpill_tool_chain.sh img apollolake-7.0-41890`
+   比如 `redpill_tool_chain.sh auto apollolake-7.0-41890`
 
-`redpill_tool_chain.sh img`运行结束之后，将会在宿主机的`./image`文件夹中生成 RedPill引导镜像。
+`redpill_tool_chain.sh auto`运行结束之后，将会在宿主机的`./image`文件夹中生成 RedPill引导镜像。
 
 依赖: `docker`
 

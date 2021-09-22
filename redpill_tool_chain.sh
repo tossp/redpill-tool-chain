@@ -45,6 +45,7 @@ function buildImage(){
         --build-arg TARGET_VERSION="${TARGET_VERSION}" \
         --build-arg DSM_VERSION="${DSM_VERSION}" \
         --build-arg TARGET_REVISION="${TARGET_REVISION}" \
+        --build-arg REDPILL_LKM_MAKE_TARGET=${REDPILL_LKM_MAKE_TARGET} \
         --tag ${DOCKER_IMAGE_NAME}:${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} ./docker
 }
 
@@ -100,6 +101,7 @@ function runContainer(){
         $( [ -e "${USER_CONFIG_JSON}" ] && echo "--volume $(realpath ${USER_CONFIG_JSON}):/opt/redpill-load/user_config.json") \
         --volume ${REDPILL_LOAD_CACHE}:/opt/redpill-load/cache \
         --volume ${REDPILL_LOAD_IMAGES}:/opt/redpill-load/images \
+        --env REDPILL_LKM_MAKE_TARGET=${REDPILL_LKM_MAKE_TARGET} \
         --env TARGET_PLATFORM="${TARGET_PLATFORM}" \
         --env TARGET_VERSION="${TARGET_VERSION}" \
         --env DSM_VERSION="${DSM_VERSION}" \
@@ -207,6 +209,7 @@ if [ "${ID}" != "all"  ]; then
     USER_CONFIG_JSON=$(getValueByJsonPath ".user_config_json" "${BUILD_CONFIG}")
     DOCKER_BASE_IMAGE=$(getValueByJsonPath ".docker_base_image" "${BUILD_CONFIG}")
     COMPILE_WITH=$(getValueByJsonPath ".compile_with" "${BUILD_CONFIG}")
+    REDPILL_LKM_MAKE_TARGET=$(getValueByJsonPath ".redpill_lkm_make_target" "${BUILD_CONFIG}")
     KERNEL_DOWNLOAD_URL=$(getValueByJsonPath ".downloads.kernel.url" "${BUILD_CONFIG}")
     KERNEL_DOWNLOAD_SHA256=$(getValueByJsonPath ".downloads.kernel.sha256" "${BUILD_CONFIG}")
     KERNEL_FILENAME=$(getValueByJsonPath ".downloads.kernel.url | split(\"/\")[] | select ( . | endswith(\".txz\"))" "${BUILD_CONFIG}")

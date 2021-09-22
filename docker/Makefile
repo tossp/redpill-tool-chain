@@ -5,13 +5,13 @@ SHELL := bash
 .DELETE_ON_ERROR:
 .SUFFIXES:
 
-export REDPILL_LKM_SRC    := ${REDPILL_LKM_SRC}
-export REDPILL_LOAD_SRC   := ${REDPILL_LOAD_SRC}
-
-export TARGET_PLATFORM    := ${TARGET_PLATFORM}
-export TARGET_VERSION     := ${TARGET_VERSION}
-export TARGET_REVISION    := ${TARGET_REVISION}
-export LINUX_SRC          := ${LINUX_SRC}
+export REDPILL_LKM_SRC         := ${REDPILL_LKM_SRC}
+export REDPILL_LOAD_SRC        := ${REDPILL_LOAD_SRC}
+export REDPILL_LKM_MAKE_TARGET := ${REDPILL_LKM_MAKE_TARGET}
+export TARGET_PLATFORM         := ${TARGET_PLATFORM}
+export TARGET_VERSION          := ${TARGET_VERSION}
+export TARGET_REVISION         := ${TARGET_REVISION}
+export LINUX_SRC               := ${LINUX_SRC}
 
 .PHONY: all
 all:
@@ -20,7 +20,7 @@ all:
 
 .PHONY: build_redpill_lkm
 build_redpill_lkm:
-	@$(MAKE) -C $(REDPILL_LKM_SRC) LINUX_SRC=$(LINUX_SRC) -j dev-v7 && \
+	@$(MAKE) -C $(REDPILL_LKM_SRC) LINUX_SRC=$(LINUX_SRC) $(REDPILL_LKM_MAKE_TARGET) && \
 	echo "#############################################" && \
 	modinfo $(REDPILL_LKM_SRC)/redpill.ko
 

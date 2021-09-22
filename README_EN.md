@@ -14,8 +14,19 @@ THX @haydibe
 - Allows to configure if the build cache is used or not ("docker.use_build_cache")
 - Allows to specify if "clean all" should delete all or only orphaned images.
 - The default `global_config.json` contains platform versions provided by the official redpill-load image. Please create new <platform_version> and point them to custom repositories if wanted.
+- Supports to add custom mounts (set`"docker.use_custom_bind_mounts":` to `"true"` and add your custom bind-mounts in `"docker.custom_bind_mounts"`). 
+- Performs integrity check of required kernel/toolkit-dev required for the image build
+- Supports the make target to specify the redpill.ko build configuration. Set <platform version>.redpill_lkm_make_target to `dev-v6`, `dev-v7`, `test-v6`, `test-v7`, `prod-v6` or `prod-v7`.
+  Make sure to use the -v6 ones on DSM6 build and -v7 on DSM7 build. By default the targets `dev-v6` and `dev-v7` are used.
+
+  - dev: all symbols included, debug messages included
+  - test: fully stripped with only warning & above (no debugs or info)
+  - prod: fully stripped with no debug messages
+
+
 ## Changes
-- from now on, only the platform version from the official redpill-load repository are supported. Thus all DSM7.0.1 platform versions are removed from global_settings.json.
+- added the additionaly required make target when building redpill.ko
+- added a new configuration item in <platform version>.redpill_lkm_make_target to set the build target
 
 ## Usage
 

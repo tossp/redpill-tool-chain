@@ -23,6 +23,7 @@
       "user_config_json": "bromolow_user_config.json",
       "docker_base_image": "ubuntu:20.04",
       "compile_with": "kernel",
+      "redpill_lkm_make_target": "dev-v6",
       "downloads": {
         "kernel": {
           "url": "https://sourceforge.net/projects/dsgpl/files/Synology%20NAS%20GPL%20Source/25426branch/bromolow-source/linux-3.10.x.txz/download",
@@ -48,6 +49,7 @@
       "user_config_json": "bromolow_user_config.json",
       "docker_base_image": "ubuntu:20.04",
       "compile_with": "toolkit_dev",
+      "redpill_lkm_make_target": "dev-v7",
       "downloads": {
         "kernel": {
           "url": "https://sourceforge.net/projects/dsgpl/files/Synology%20NAS%20GPL%20Source/25426branch/bromolow-source/linux-3.10.x.txz/download",
@@ -73,6 +75,7 @@
       "user_config_json": "apollolake_user_config.json",
       "docker_base_image": "ubuntu:20.04",
       "compile_with": "kernel",
+      "redpill_lkm_make_target": "dev-v6",
       "downloads": {
         "kernel": {
           "url": "https://sourceforge.net/projects/dsgpl/files/Synology%20NAS%20GPL%20Source/25426branch/apollolake-source/linux-4.4.x.txz/download",
@@ -98,6 +101,7 @@
       "user_config_json": "apollolake_user_config.json",
       "docker_base_image": "ubuntu:20.04",
       "compile_with": "toolkit_dev",
+      "redpill_lkm_make_target": "dev-v7",
       "downloads": {
         "kernel": {
           "url": "https://sourceforge.net/projects/dsgpl/files/Synology%20NAS%20GPL%20Source/25426branch/apollolake-source/linux-4.4.x.txz/download",
@@ -123,6 +127,7 @@
       "user_config_json": "apollolake_user_config.json",
       "docker_base_image": "ubuntu:20.04",
       "compile_with": "toolkit_dev",
+      "redpill_lkm_make_target": "dev-v7",
       "downloads": {
         "kernel": {
           "url": "https://sourceforge.net/projects/dsgpl/files/Synology%20NAS%20GPL%20Source/25426branch/apollolake-source/linux-4.4.x.txz/download",
