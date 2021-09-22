@@ -20,7 +20,7 @@ all:
 
 .PHONY: build_redpill_lkm
 build_redpill_lkm:
-	@$(MAKE) -C $(REDPILL_LKM_SRC) LINUX_SRC=$(LINUX_SRC) && \
+	@$(MAKE) -C $(REDPILL_LKM_SRC) LINUX_SRC=$(LINUX_SRC) -j dev-v7 && \
 	echo "#############################################" && \
 	modinfo $(REDPILL_LKM_SRC)/redpill.ko
 
