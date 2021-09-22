@@ -37,12 +37,11 @@ function clean(){
     fi
     if [ "${ID}" == "all" ];then
         OLD_IMAGES=$(docker image ls --filter label=redpill-tool-chain --quiet $( [ "${CLEAN_IMAGES}" == "orphaned" ] && echo "--filter dangling=true"))
-        docker builder prune --filter label=redpill-tool-chain --force
+        docker builder prune --all --filter label=redpill-tool-chain --force
     else
         OLD_IMAGES=$(docker image ls --filter label=redpill-tool-chain=${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} --quiet --filter dangling=true)
         docker builder prune --filter label=redpill-tool-chain=${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} --force
     fi
-
     if [ ! -z "${OLD_IMAGES}" ]; then
         docker image rm ${OLD_IMAGES}
     fi
@@ -175,8 +174,8 @@ if [ "${ID}" != "all"  ]; then
     fi
 else
     if [ "${ACTION}" != "clean" ]; then
-            echo "All is not supported for action \"${ACTION}\""
-            exit 1
+        echo "All is not supported for action \"${ACTION}\""
+        exit 1
     fi
 fi
 
