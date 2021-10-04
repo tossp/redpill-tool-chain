@@ -14,7 +14,7 @@
 > PS: 由于toolkit dev缺少fs/proc所需的源代码，因此它们取自提取的DSM6.2.4内核源代码。
 构建需要此单个文件夹的源代码，但不使用内核源代码构建redpill.ko模块。 
 
-如果您发现工具链的构建方式有问题，或者有改进的想法：请让我知道。
+如果您发现工具链的构建方式有问题或者有改进的想法，请让我知道。
 
 对于所有其他问题：请向社区提出——我知道的并不比其他人多。
 
@@ -35,3 +35,4 @@
 为了方便我自己
 - `docker/Dockerfile` 中补入了阿里云镜像
 - `redpill_tool_chain.sh run <platform_version>`自定义引导构建过程
+- `dd if=$(ls -lt ./images/redpill-* | awk 'NR==1{print $9}') of=/dev/synoboot bs=4M && sync`写入引导
