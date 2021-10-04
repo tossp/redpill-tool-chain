@@ -12,7 +12,7 @@
     "custom_bind_mounts": [
       {
         "host_path": "change_me",
-        "container_path": "/change_me"
+        "container_path": "/opt/redpill-load/custom"
       }
     ]
   },
