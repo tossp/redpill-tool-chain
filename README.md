@@ -21,6 +21,7 @@
 # 如何使用?
 
 1. 编辑`<platform>_user_config.json`比如 918+ 就编辑 `apollolake_user_config.json` 文件
+1. 编辑`global_config.json`中的`docker.use_custom_bind_mounts`、`docker.custom_bind_mounts.host_path`和`docker.custom_bind_mounts.container_path`三个字段
 1. 为你想要的平台和版本构建编译镜像: 
    比如 `redpill_tool_chain.sh build apollolake-7.0-41890`
 1. 为你想要的平台和版本构建引导: 

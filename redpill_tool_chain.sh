@@ -148,7 +148,7 @@ Actions: build, auto, run, clean
             Interactive Bash terminal.
 
 - clean:    Removes old (=dangling) images and the build cache for a platform version.
-            Use `all` as platform version to remove images and build caches for all platform versions.
+            Use ‘all’ as platform version to remove images and build caches for all platform versions.
 
 Available platform versions:
 ---------------------
