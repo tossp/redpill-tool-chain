@@ -1,2 +1,3 @@
 *.txz
-user_config.json
+*.json
+!sample_user_config.json
