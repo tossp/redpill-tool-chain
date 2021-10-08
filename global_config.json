@@ -8,10 +8,10 @@
     "auto_clean": "false",
     "use_build_cache": "true",
     "clean_images": "all",
-    "use_custom_bind_mounts": "false",
+    "use_custom_bind_mounts": "true",
     "custom_bind_mounts": [
       {
-        "host_path": "change_me",
+        "host_path": "./custom",
         "container_path": "/opt/redpill-load/custom"
       }
     ]

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -eu
+cd $(dirname $(readlink -f "$0"))
 
 function checkPreconditon(){
     missing_tools=""
@@ -110,6 +111,50 @@ function runContainer(){
         ${DOCKER_IMAGE_NAME}:${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} $( [ "${CMD}" == "run" ] && echo "/bin/bash")
 }
 
+function __ext_add(){
+    if [ -z ${EXT_PATH} ]; then 
+        echo "Custom extension directory is not enabled"
+        exit 1
+    fi
+    if [ ! -d ${EXT_PATH} ];then
+        mkdir ${EXT_PATH}
+    fi
+    readonly URL="${1}"
+    local MRP_TMP_IDX="${EXT_PATH}/_new_ext_index.tmp_json"
+     
+    if [ -f ${MRP_TMP_IDX} ];then
+        rm ${MRP_TMP_IDX}
+    fi
+    
+    echo "Downloading"   
+    curl --progress-bar --location ${URL} --output ${MRP_TMP_IDX}
+
+    ext_json=$(cat ${MRP_TMP_IDX})
+    ext_id=$(getValueByJsonPath ".id" "${ext_json}")
+    ext_name=$(getValueByJsonPath ".info.name" "${ext_json}") 
+    ext_releases="$(getValueByJsonPath ".releases|keys|join(\" \")" "${ext_json}")" 
+    echo -e "${ext_id}\nName:\t\t\t${ext_id}\nDescription:\t\t$(getValueByJsonPath ".info.description" "${ext_json}")\nSupport platform:\t${ext_releases}\nInstallation is complete!"
+    if [ ! -d "${EXT_PATH}/${ext_id}/${ext_id}" ];then
+        mkdir -p ${EXT_PATH}/${ext_id}
+    fi
+    echo ${ext_json} > "${EXT_PATH}/${ext_id}/${ext_id}.json"
+    rm ${MRP_TMP_IDX}
+}
+
+function __ext_del(){
+    if [ -z ${EXT_PATH} ]; then 
+        echo "Custom extension directory is not enabled"
+        exit 1
+    fi
+    for i in ${EXTENSION_IDS}
+    do  
+        if [ "${i}" == "${1}" ]; then
+            rm -rf "${EXT_PATH}/${1}"
+            exit 0
+        fi
+    done
+}
+
 function downloadFromUrlIfNotExists(){
     local DOWNLOAD_URL="${1}"
     local OUT_FILE="${2}"
@@ -150,9 +195,19 @@ Actions: build, auto, run, clean
 - clean:    Removes old (=dangling) images and the build cache for a platform version.
             Use ‘all’ as platform version to remove images and build caches for all platform versions.
 
+- add:      To install extension you need to know its index file location and nothing more.
+            eg: add 'https://example.com/some-extension/rpext-index.json'
+
+- del:      To remove an already installed extension you need to know its ID.
+            eg: del 'example_dev.some_extension'
+
 Available platform versions:
 ---------------------
 ${AVAILABLE_IDS}
+
+Custom Extensions:
+---------------------
+${EXTENSION_IDS}
 
 Check global_settings.json for settings.
 EOF
@@ -181,6 +236,25 @@ CLEAN_IMAGES=$(getValueByJsonPath ".docker.clean_images" "${CONFIG}")
 USE_CUSTOM_BIND_MOUNTS=$(getValueByJsonPath ".docker.use_custom_bind_mounts" "${CONFIG}")
 CUSTOM_BIND_MOUNTS=$(getValueByJsonPath ".docker.custom_bind_mounts" "${CONFIG}")
 
+EXT_PATH=""
+EXTENSION_IDS="[Nothing]"
+
+if [[ "${USE_CUSTOM_BIND_MOUNTS}" == "true" ]]; then    
+    NUMBER_OF_MOUNTS=$(getValueByJsonPath ". | length" "${CUSTOM_BIND_MOUNTS}")
+    for (( i=0; i<${NUMBER_OF_MOUNTS}; i++ ));do
+        HOST_PATH=$(getValueByJsonPath ".[${i}].host_path" "${CUSTOM_BIND_MOUNTS}")
+        CONTAINER_PATH=$(getValueByJsonPath ".[${i}].container_path" "${CUSTOM_BIND_MOUNTS}")
+        
+        if [ -e $(realpath "${HOST_PATH}") ]; then
+            EXT_PATH="${HOST_PATH}/extensions"
+        fi
+        
+        if [[ "${CONTAINER_PATH}" == "/opt/redpill-load/custom" && -d "${EXT_PATH}" ]];then
+            EXTENSION_IDS=$(ls ${EXT_PATH})
+        fi
+    done
+fi
+
 if [ $# -lt 2 ]; then
     showHelp
     exit 1
@@ -189,7 +263,7 @@ fi
 ACTION=${1}
 ID=${2}
 
-if [ "${ID}" != "all"  ]; then
+if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ID}" != "all" ]]; then
     BUILD_CONFIG=$(getValueByJsonPath ".build_configs[] | select(.id==\"${ID}\")" "${CONFIG}")
     if [ -z "${BUILD_CONFIG}" ];then
         echo "Error: Platform version ${ID} not specified in global_config.json"
@@ -226,13 +300,22 @@ if [ "${ID}" != "all"  ]; then
         EXTRACTED_KSRC="/usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${DSM_VERSION}/build/"
     fi
 else
-    if [ "${ACTION}" != "clean" ]; then
+    if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ACTION}" != "clean" ]]; then
         echo "All is not supported for action \"${ACTION}\""
         exit 1
     fi
 fi
 
+
+
+
 case "${ACTION}" in
+    add)    __ext_add "${2}"
+            ;;
+    del)    __ext_del "${2}"
+            echo -e "Extension ID '${2}' not found:\n---------------------\n${EXTENSION_IDS}"
+            exit 1
+            ;;
     build)  if [ "${COMPILE_WITH}" == "kernel" ];then
                 downloadFromUrlIfNotExists "${KERNEL_DOWNLOAD_URL}" "${DOWNLOAD_FOLDER}/${KERNEL_FILENAME}" "Kernel"
             else

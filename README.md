@@ -23,8 +23,10 @@
 
 # 如何使用?
 
+1. 复制`sample_user_config.json`为`bromolow_user_config.json`或者`apollolake_user_config.json` 
 1. 编辑`<platform>_user_config.json`比如 918+ 就编辑 `apollolake_user_config.json` 文件
-1. 编辑`global_config.json`中的`docker.use_custom_bind_mounts`和`docker.custom_bind_mounts.host_path`两个字段，并放入扩展驱动
+1. 添加扩展驱动：
+   比如 `redpill_tool_chain.sh add https://raw.githubusercontent.com/tossp/rp-ext/master/mpt3sas/rpext-index.json`
 1. 为你想要的平台和版本构建编译镜像: 
    比如 `redpill_tool_chain.sh build apollolake-7.0-41890`
 1. 为你想要的平台和版本构建引导: 
@@ -32,10 +34,15 @@
 
 `redpill_tool_chain.sh auto`运行结束之后，将会在宿主机的`./image`文件夹中生成 RedPill引导镜像。
 
+`<platform>_user_config.json`文件中的`extensions`字段保持为空，会自动打包所有已安装的自定义驱动。
+自定义驱动请按需添加，尽量不要加载无关驱动，否则会因为扩展驱动太大导致打包失败。
+
 依赖: `docker`
 
 # 其他说明
 为了方便我自己
 - `docker/Dockerfile` 中补入了阿里云镜像
+- `redpill_tool_chain.sh add <URL>`添加扩展驱动
+- `redpill_tool_chain.sh del <ID>`删除扩展驱动
 - `redpill_tool_chain.sh run <platform_version>`自定义引导构建过程
 - `dd if=$(ls -lt ./images/redpill-* | awk 'NR==1{print $9}') of=/dev/synoboot bs=4M && sync`写入引导
