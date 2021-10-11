@@ -46,4 +46,4 @@
 - `redpill_tool_chain.sh add <URL>`添加扩展驱动
 - `redpill_tool_chain.sh del <ID>`删除扩展驱动
 - `redpill_tool_chain.sh run <platform_version>`自定义引导构建过程
-- `dd if=$(ls -lt ./images/redpill-* | awk 'NR==1{print $9}') of=/dev/synoboot bs=4M && sync`写入引导
+- 使用`syno.sh`写入引导
