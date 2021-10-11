@@ -7,16 +7,16 @@ T='/dev/synoboot'
 IMG_FILE=`ls -lt ${S} 2>/dev/null | awk 'NR==1{print $9}'`
 
 if [ ! -b "${T}" ];then
-    echo "目标地址不存在:${T}"
+    echo -e "The target block device address does not exist:\t${T}"
     exit 1
 fi
 
 
 if [ -f "${IMG_FILE}" ];then
-    echo "准备写入镜像:${PWD}/${IMG_FILE}"
-    echo "到设备:${T}"
-    # dd if="${IMG_FILE}" of="${T}" bs=4M conv=nocreat oflag=sync status=progress
+    echo -e "Boot image:\t\t${PWD}/${IMG_FILE}"
+    echo -e "Target block device:\t${T}"
+    dd if="${IMG_FILE}" of="${T}" bs=4M conv=nocreat oflag=sync status=progress
 else
-    echo "不是有效的文件:${IMG_FILE}"
+    echo -e "Is not a valid file:\t${IMG_FILE}"
     ls -lt ${S}
 fi
