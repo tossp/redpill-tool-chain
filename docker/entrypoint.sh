@@ -5,14 +5,19 @@ if [ $# -eq 0 ];then
     git -C ${REDPILL_LKM_SRC} fetch
     git -C ${REDPILL_LOAD_SRC} fetch
 
-    REDPILL_LKM_BRANCH=$(git -C ${REDPILL_LKM_SRC} name-rev --name-only HEAD)
-    echo "Checking if redpill-lkm sources require pull."
-    if [ $(git -C ${REDPILL_LKM_SRC} rev-list HEAD...origin/${REDPILL_LKM_BRANCH} --count ) -eq 0 ];then
-        echo "  Nothing to do."
+    if [ "${LOCAL_RP_LKM_USE}" == "false" ]; then
+        REDPILL_LKM_BRANCH=$(git -C ${REDPILL_LKM_SRC} name-rev --name-only HEAD)
+        echo "Checking if redpill-lkm sources require pull."
+        if [ $(git -C ${REDPILL_LKM_SRC} rev-list HEAD...origin/${REDPILL_LKM_BRANCH} --count ) -eq 0 ];then
+            echo "  Nothing to do."
+        else
+            git -C ${REDPILL_LKM_SRC} pull
+            echo "Pulled latest commits."
+        fi
     else
-        git -C ${REDPILL_LKM_SRC} pull
-        echo "Pulled latest commits."
+        echo "Redpill-lkm sources are mapped into the build container, skipping pull of latest sources."
     fi
+
 
     if [ "${LOCAL_RP_LOAD_USE}" == "false" ]; then
         REDPILL_LOAD_BRANCH=$(git -C ${REDPILL_LOAD_SRC} name-rev --name-only HEAD)

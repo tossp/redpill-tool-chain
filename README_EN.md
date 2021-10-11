@@ -8,6 +8,7 @@ THX @haydibe
 - Caches .pat downloads inside the container on the host.
 - Configuration is done in the JSON file `global_config.json`; custom <platform_version> entries can be added underneath the `building_configs` block. Make sure the id is unique per block!
 - Supports a `user_config.json` per <platform_version>
+- Supports to bind a local redpill-lkm folder into the container (set `"docker.local_rp_lkm_use": "true"` and set `"docker.local_rp_lkm_path": "path/to/rp-lkm"`)
 - Supports to bind a local redpill-load folder into the container (set `"docker.local_rp_load_use": "true"` and set `"docker.local_rp_load_path": "path/to/rp-load"`)
 - Supports to clean old image versions and the build cache per <platform_version> or for `all` of them at once.
 - Supports to auto clean old image versions and the build cache for the current build image, set `"docker.auto_clean":`to `"true"`.

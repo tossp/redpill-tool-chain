@@ -77,6 +77,10 @@ function runContainer(){
         echo "user config does not exist: ${USER_CONFIG_JSON}"
         exit 1
     fi
+    if [[ "${LOCAL_RP_LKM_USE}" == "true" && ! -e $(realpath "${LOCAL_RP_LKM_PATH}") ]]; then
+        echo "Local redpill-lkm path does not exist: ${LOCAL_RP_LKM_PATH}"
+        exit 1
+    fi
     if [[ "${LOCAL_RP_LOAD_USE}" == "true" && ! -e $(realpath "${LOCAL_RP_LOAD_PATH}") ]]; then
         echo "Local redpill-load path does not exist: ${LOCAL_RP_LOAD_PATH}"
         exit 1
@@ -99,6 +103,7 @@ function runContainer(){
         --volume /dev:/dev \
         $( [ "${USE_CUSTOM_BIND_MOUNTS}" == "true" ] && echo "${BINDS}") \
         $( [ "${LOCAL_RP_LOAD_USE}" == "true" ] && echo "--volume $(realpath ${LOCAL_RP_LOAD_PATH}):/opt/redpill-load") \
+        $( [ "${LOCAL_RP_LKM_USE}" == "true" ] && echo "--volume $(realpath ${LOCAL_RP_LKM_PATH}):/opt/redpill-lkm") \
         $( [ -e "${USER_CONFIG_JSON}" ] && echo "--volume $(realpath ${USER_CONFIG_JSON}):/opt/redpill-load/user_config.json") \
         --volume ${REDPILL_LOAD_CACHE}:/opt/redpill-load/cache \
         --volume ${REDPILL_LOAD_IMAGES}:/opt/redpill-load/images \
@@ -107,12 +112,13 @@ function runContainer(){
         --env TARGET_VERSION="${TARGET_VERSION}" \
         --env DSM_VERSION="${DSM_VERSION}" \
         --env REVISION="${TARGET_REVISION}" \
+        --env LOCAL_RP_LKM_USE="${LOCAL_RP_LKM_USE}" \
         --env LOCAL_RP_LOAD_USE="${LOCAL_RP_LOAD_USE}" \
         ${DOCKER_IMAGE_NAME}:${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} $( [ "${CMD}" == "run" ] && echo "/bin/bash")
 }
 
 function __ext_add(){
-    if [ -z ${EXT_PATH} ]; then 
+    if [ -z ${EXT_PATH} ]; then
         echo "Custom extension directory is not enabled"
         exit 1
     fi
@@ -121,18 +127,18 @@ function __ext_add(){
     fi
     readonly URL="${1}"
     local MRP_TMP_IDX="${EXT_PATH}/_new_ext_index.tmp_json"
-     
+
     if [ -f ${MRP_TMP_IDX} ];then
         rm ${MRP_TMP_IDX}
     fi
-    
-    echo "Downloading"   
+
+    echo "Downloading"
     curl --progress-bar --location ${URL} --output ${MRP_TMP_IDX}
 
     ext_json=$(cat ${MRP_TMP_IDX})
     ext_id=$(getValueByJsonPath ".id" "${ext_json}")
-    ext_name=$(getValueByJsonPath ".info.name" "${ext_json}") 
-    ext_releases="$(getValueByJsonPath ".releases|keys|join(\" \")" "${ext_json}")" 
+    ext_name=$(getValueByJsonPath ".info.name" "${ext_json}")
+    ext_releases="$(getValueByJsonPath ".releases|keys|join(\" \")" "${ext_json}")"
     echo -e "${ext_id}\nName:\t\t\t${ext_id}\nDescription:\t\t$(getValueByJsonPath ".info.description" "${ext_json}")\nSupport platform:\t${ext_releases}\nInstallation is complete!"
     if [ ! -d "${EXT_PATH}/${ext_id}/${ext_id}" ];then
         mkdir -p ${EXT_PATH}/${ext_id}
@@ -142,12 +148,12 @@ function __ext_add(){
 }
 
 function __ext_del(){
-    if [ -z ${EXT_PATH} ]; then 
+    if [ -z ${EXT_PATH} ]; then
         echo "Custom extension directory is not enabled"
         exit 1
     fi
     for i in ${EXTENSION_IDS}
-    do  
+    do
         if [ "${i}" == "${1}" ]; then
             rm -rf "${EXT_PATH}/${1}"
             exit 0
@@ -239,16 +245,16 @@ CUSTOM_BIND_MOUNTS=$(getValueByJsonPath ".docker.custom_bind_mounts" "${CONFIG}"
 EXT_PATH=""
 EXTENSION_IDS="[Nothing]"
 
-if [[ "${USE_CUSTOM_BIND_MOUNTS}" == "true" ]]; then    
+if [[ "${USE_CUSTOM_BIND_MOUNTS}" == "true" ]]; then
     NUMBER_OF_MOUNTS=$(getValueByJsonPath ". | length" "${CUSTOM_BIND_MOUNTS}")
     for (( i=0; i<${NUMBER_OF_MOUNTS}; i++ ));do
         HOST_PATH=$(getValueByJsonPath ".[${i}].host_path" "${CUSTOM_BIND_MOUNTS}")
         CONTAINER_PATH=$(getValueByJsonPath ".[${i}].container_path" "${CUSTOM_BIND_MOUNTS}")
-        
+
         if [ -e $(realpath "${HOST_PATH}") ]; then
             EXT_PATH="${HOST_PATH}/extensions"
         fi
-        
+
         if [[ "${CONTAINER_PATH}" == "/opt/redpill-load/custom" && -d "${EXT_PATH}" ]];then
             EXTENSION_IDS=$(ls ${EXT_PATH})
         fi
@@ -274,6 +280,8 @@ if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ID}" != "all" ]]; then
     USE_BUILDKIT=$(getValueByJsonPath ".docker.use_buildkit" "${CONFIG}")
     DOCKER_IMAGE_NAME=$(getValueByJsonPath ".docker.image_name" "${CONFIG}")
     DOWNLOAD_FOLDER=$(getValueByJsonPath ".docker.download_folder" "${CONFIG}")
+    LOCAL_RP_LKM_USE=$(getValueByJsonPath ".docker.local_rp_lkm_use" "${CONFIG}")
+    LOCAL_RP_LKM_PATH=$(getValueByJsonPath ".docker.local_rp_lkm_path" "${CONFIG}")
     LOCAL_RP_LOAD_USE=$(getValueByJsonPath ".docker.local_rp_load_use" "${CONFIG}")
     LOCAL_RP_LOAD_PATH=$(getValueByJsonPath ".docker.local_rp_load_path" "${CONFIG}")
     TARGET_PLATFORM=$(getValueByJsonPath ".platform_version | split(\"-\")[0]" "${BUILD_CONFIG}")
@@ -305,9 +313,6 @@ else
         exit 1
     fi
 fi
-
-
-
 
 case "${ACTION}" in
     add)    __ext_add "${2}"
