@@ -46,4 +46,4 @@
 - `redpill_tool_chain.sh add <URL>`添加扩展驱动
 - `redpill_tool_chain.sh del <ID>`删除扩展驱动
 - `redpill_tool_chain.sh run <platform_version>`自定义引导构建过程
-- 使用`syno.sh`写入引导
+- 使用`synoboot.sh`写入引导
