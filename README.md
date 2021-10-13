@@ -23,7 +23,7 @@
 
 ## 如何使用?
 
-1. 复制`sample_user_config.json`为`bromolow_user_config.json`或者`apollolake_user_config.json` 
+1. 复制`sample_user_config.json`为`bromolow_user_config.json`或者`apollolake_user_config.json`
 1. 编辑`<platform>_user_config.json`比如 918+ 就编辑 `apollolake_user_config.json` 文件
 1. 添加扩展驱动：
    比如 `redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/mpt3sas/rpext-index.json`

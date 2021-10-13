@@ -133,7 +133,7 @@ function __ext_add(){
     fi
 
     echo "Downloading"
-    curl --progress-bar --location ${URL} --output ${MRP_TMP_IDX}
+    curl --progress-bar --insecure --location ${DOWNLOAD_URL} --output ${OUT_FILE}
 
     ext_json=$(cat ${MRP_TMP_IDX})
     ext_id=$(getValueByJsonPath ".id" "${ext_json}")
