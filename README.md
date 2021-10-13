@@ -80,7 +80,7 @@
 
 ### 查看帮助文本
 
-```
+```txt
 ./redpill_tool_chain.sh
 Usage: ./redpill_tool_chain.sh <action> <platform version>
 
