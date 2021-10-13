@@ -12,9 +12,12 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak && \
     sed  -i "s/archive.ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list && \
     sed  -i "s/security.ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list && \
+    sed  -i "s/deb.debian.org/mirrors.aliyun.com/g" /etc/apt/sources.list && \
+    sed  -i "s/security.debian.org/mirrors.aliyun.com/g" /etc/apt/sources.list && \
     apt-get update && \
-    apt-get install --yes --no-install-recommends ca-certificates build-essential git libssl-dev curl cpio bspatch vim gettext bc bison flex dosfstools kmod jq && \
-    rm -rf /var/lib/apt/lists/* /tmp/*
+    apt-get install --yes --no-install-recommends ca-certificates build-essential git libssl-dev curl cpio bspatch vim gettext bc bison flex dosfstools kmod && \
+    rm -rf /var/lib/apt/lists/* /tmp/* && \
+    curl --progress-bar --output /usr/bin/jq --location https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 && chmod +x /usr/bin/jq
 
 ARG REDPILL_LKM_REPO=https://github.com/RedPill-TTG/redpill-lkm.git
 ARG REDPILL_LKM_BRANCH=master
