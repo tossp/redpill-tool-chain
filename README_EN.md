@@ -64,34 +64,57 @@ Actions: build, auto, run, clean
             Interactive Bash terminal.
 
 - clean:    Removes old (=dangling) images and the build cache for a platform version.
-            Use `all` as platform version to remove images and build caches for all platform versions. `"docker.clean_images"`="all" only has affect with clean all.
+            Use ‘all’ as platform version to remove images and build caches for all platform versions.
+
+- add:      To install extension you need to know its index file location and nothing more.
+            eg: add 'https://example.com/some-extension/rpext-index.json'
+
+- del:      To remove an already installed extension you need to know its ID.
+            eg: del 'example_dev.some_extension'
 
 Available platform versions:
 ---------------------
 bromolow-6.2.4-25556
 bromolow-7.0-41222
+bromolow-7.0.1-42218
 apollolake-6.2.4-25556
 apollolake-7.0-41890
+apollolake-7.0.1-42218
+
+Custom Extensions:
+---------------------
+pocopico.mpt3sas
+thethorgroup.boot-wait
+thethorgroup.virtio
 ```
+
+### Custom extended driver management
+
+- Install thethorgroup.virtio    : `./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-virtio/rpext-index.json`
+- Install thethorgroup.boot-wait : `./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-boot-wait/rpext-index.json`
+- Install pocopico.mpt3sas       : `./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/mpt3sas/rpext-index.json`
+- Remove pocopico.mpt3sas        : `./redpill_tool_chain.sh del pocopico.mpt3sas`
+
+[Get more extended drivers....](https://github.com/pocopico/rp-ext)
 
 ### Build toolchain image
 
-For Bromolow 6.2.4   : `./redpill_tool_chain.sh build bromolow-6.2.4-25556`
-For Bromolow 7.0     : `./redpill_tool_chain.sh build bromolow-7.0-41222`
-For Apollolake 6.2.4 : `./redpill_tool_chain.sh build apollolake-6.2.4-25556`
-For Apollolake 7.0   : `./redpill_tool_chain.sh build apollolake-7.0-41890`
+- For Bromolow 6.2.4   : `./redpill_tool_chain.sh build bromolow-6.2.4-25556`
+- For Bromolow 7.0     : `./redpill_tool_chain.sh build bromolow-7.0-41222`
+- For Apollolake 6.2.4 : `./redpill_tool_chain.sh build apollolake-6.2.4-25556`
+- For Apollolake 7.0   : `./redpill_tool_chain.sh build apollolake-7.0-41890`
 
 ### Create redpill bootloader image
 
-For Bromolow 6.2.4   : `./redpill_tool_chain.sh auto bromolow-6.2.4-25556`
-For Bromolow 7.0     : `./redpill_tool_chain.sh auto bromolow-7.0-41222`
-For Apollolake 6.2.4 : `./redpill_tool_chain.sh auto apollolake-6.2.4-25556`
-For Apollolake 7.0   : `./redpill_tool_chain.sh auto apollolake-7.0-41890`
+- For Bromolow 6.2.4   : `./redpill_tool_chain.sh auto bromolow-6.2.4-25556`
+- For Bromolow 7.0     : `./redpill_tool_chain.sh auto bromolow-7.0-41222`
+- For Apollolake 6.2.4 : `./redpill_tool_chain.sh auto apollolake-6.2.4-25556`
+- For Apollolake 7.0   : `./redpill_tool_chain.sh auto apollolake-7.0-41890`
 
 ### Clean old redpill bootloader images and build cache
 
-For Bromolow 6.2.4   : `./redpill_tool_chain.sh clean bromolow-6.2.4-25556`
-For Bromolow 7.0     : `./redpill_tool_chain.sh clean bromolow-7.0-41222`
-For Apollolake 6.2.4 : `./redpill_tool_chain.sh clean apollolake-6.2.4-25556`
-For Apollolake 7.0   : `./redpill_tool_chain.sh clean apollolake-7.0-41890`
-For all              : `./redpill_tool_chain.sh clean all`
+- For Bromolow 6.2.4   : `./redpill_tool_chain.sh clean bromolow-6.2.4-25556`
+- For Bromolow 7.0     : `./redpill_tool_chain.sh clean bromolow-7.0-41222`
+- For Apollolake 6.2.4 : `./redpill_tool_chain.sh clean apollolake-6.2.4-25556`
+- For Apollolake 7.0   : `./redpill_tool_chain.sh clean apollolake-7.0-41890`
+- For all              : `./redpill_tool_chain.sh clean all`
