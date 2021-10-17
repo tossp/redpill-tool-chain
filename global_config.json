@@ -171,7 +171,7 @@
         "branch": "master"
       },
       "redpill_load": {
-        "source_url": "https://github.com/tossp/redpill-load.git",
+        "source_url": "https://github.com/Donxu82/redpill-load.git",
         "branch": "42218"
       }
     }
