@@ -1,5 +1,7 @@
 name: 测试构建
+
 on: [push]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,9 +33,6 @@ jobs:
             cache/*.pat
             docker/downloads/*.txz
           key: ${{matrix.platform}}-${{matrix.version}}-${{ hashFiles('global_config.json') }}
-          restore-keys: |
-            ${{matrix.platform}}-${{matrix.version}}-
-            ${{matrix.platform}}-
 
       - name: 准备构建环境
         run: |
@@ -52,7 +51,7 @@ jobs:
       - name: 上传引导镜像到 github actions
         uses: actions/upload-artifact@v2
         with:
-          name: dsm-${{matrix.version}}
+          name: dsm-${{matrix.platform}}-${{matrix.version}}
           path: images/redpill-DS[39]*.img
           if-no-files-found: error
 
