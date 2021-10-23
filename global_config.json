@@ -93,8 +93,8 @@
         "branch": "master"
       },
       "redpill_load": {
-        "source_url": "https://github.com/unknown-o/redpill-load.git",
-        "branch": "master"
+        "source_url": "https://github.com/jimmyGALLAND/redpill-load.git",
+        "branch": "develop"
       }
     },
     {
