@@ -5,7 +5,7 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: 编译 "${{matrix.platform}} ${{matrix.version}}"
+    name: 编译 "apollolake 7.0.1-42218"
     strategy:
       fail-fast: false
       matrix:
@@ -32,27 +32,27 @@ jobs:
           path: |
             cache/*.pat
             docker/downloads/*.txz
-          key: ${{matrix.platform}}-${{matrix.version}}-${{ hashFiles('global_config.json') }}
+          key: apollolake-7.0.1-42218-${{ hashFiles('global_config.json') }}
 
       - name: 准备构建环境
         run: |
-          ./redpill_tool_chain.sh build ${{matrix.platform}}-${{matrix.version}}
+          ./redpill_tool_chain.sh build apollolake-7.0.1-42218
 
       - name: 配置引导镜像
         run: |
-          cp sample_user_config.json ${{matrix.platform}}_user_config.json
+          cp sample_user_config.json apollolake_user_config.json
           sed -i -e 's\0x0001\0x0002\g' -e 's\0x46f4\0x0002\g' -e 's\1234XXX123\0123456789\g' -e 's\XXYYXXYYXXYY\00AAAAAAAAAA\g' -e 's/00AAAAAAAAAA"/&,\n\t"mac2": "00BBBBBBBBBB",\n\t"netif_num": 2/' -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "2"\n    },/' ${{matrix.platform}}_user_config.json
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-virtio/rpext-index.json
           ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/mpt3sas/rpext-index.json
 
       - name: 编译引导镜像
-        run: ./redpill_tool_chain.sh auto ${{matrix.platform}}-${{matrix.version}}
+        run: ./redpill_tool_chain.sh auto apollolake-7.0.1-42218
 
 
       - name: 上传引导镜像到 github actions
         uses: actions/upload-artifact@v2
         with:
-          name: dsm-${{matrix.platform}}-${{matrix.version}}
+          name: dsm-apollolake-7.0.1-42218
           path: images/redpill-DS[39]*.img
           if-no-files-found: error
 
