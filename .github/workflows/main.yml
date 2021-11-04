@@ -43,6 +43,11 @@ jobs:
           sed -i -e 's\0x0001\0x0002\g' -e 's\0x46f4\0x0002\g' -e 's\1234XXX123\2021PDN123456\g' -e 's\XXYYXXYYXXYY\000C29E53D89\g' -e 's/00AAAAAAAAAA"/&,\n\t"mac2": "00BBBBBBBBBB",\n\t"netif_num": 2/' -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "2"\n    },/' ${{matrix.platform}}_user_config.json
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-virtio/rpext-index.json
           ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/mpt3sas/rpext-index.json
+          ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-virtio/rpext-index.json
+          ./redpill_tool_chain.sh add https://github.com/pocopico/rp-ext/blob/main/redpill-boot-wait/rpext-index.json
+          ./redpill_tool_chain.sh add https://github.com/pocopico/rp-ext/blob/main/redpill-acpid/rpext-index.json
+          ./redpill_tool_chain.sh add https://github.com/pocopico/rp-ext/blob/main/e1000e/rpext-index.json
+          ./redpill_tool_chain.sh add https://github.com/pocopico/rp-ext/blob/main/e1000/rpext-index.json
       - name: 编译引导镜像
         run: ./redpill_tool_chain.sh auto ${{matrix.platform}}-${{matrix.version}}
 
