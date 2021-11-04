@@ -45,7 +45,6 @@ jobs:
           ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/mpt3sas/rpext-index.json
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-virtio/rpext-index.json
           ./redpill_tool_chain.sh add https://github.com/pocopico/rp-ext/blob/main/redpill-boot-wait/rpext-index.json
-          ./redpill_tool_chain.sh add https://github.com/pocopico/rp-ext/blob/main/redpill-acpid/rpext-index.json
           ./redpill_tool_chain.sh add https://github.com/pocopico/rp-ext/blob/main/e1000e/rpext-index.json
           ./redpill_tool_chain.sh add https://github.com/pocopico/rp-ext/blob/main/e1000/rpext-index.json
       - name: 编译引导镜像
