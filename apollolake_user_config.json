@@ -1,17 +1,11 @@
 {
-  "extra_cmdline": {
-    "pid": "0x5591",
-    "vid": "0x0781",
-    "sn": "17A0PDN949204",
-    "mac1": "001132827E67",
-    "mac2": "001132827E68"
-  },
-  "synoinfo": {
-    "maxdisks": "24",
-    "maxlanport": "4",
-    "usbportcfg": "0x30000",
-    "esataportcfg": "0x0",
-    "internalportcfg": "0xffff"
-  },
-  "ramdisk_copy": {}
+    "extra_cmdline": {
+        "pid": "0x5591",
+        "vid": "0x0781",
+        "sn": "1234XXX123",
+        "mac1": "7085C2736F5C"
+    },
+    "synoinfo": {},
+    "ramdisk_copy": {},
+    "extensions": []
 }
