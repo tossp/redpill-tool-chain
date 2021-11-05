@@ -1,3 +1,5 @@
+> https://github.com/wang349925756/redpill-tool-chain/actions/runs/1423977808 添加了thethorgroup.virtio、thethorgroup.boot-wait、pocopico.mpt3sas、pocopico.e1000、pocopico.vmw_pvscsi、pocopico.vmxnet3 这里要根据自己的驱动做一些增删改的操作！伸手党不太适用。
+
 # RedPill Tool Chain
 
 这是一个测试项目，可能会有不可预测的事情发生（比如：毁损数据、烧毁硬件等等），请**谨慎使用**。
