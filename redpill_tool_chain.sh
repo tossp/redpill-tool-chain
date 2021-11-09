@@ -133,7 +133,7 @@ function __ext_add(){
     fi
 
     echo "Downloading"
-    curl --progress-bar --location ${URL} --output ${MRP_TMP_IDX}
+    curl -k --progress-bar --location ${URL} --output ${MRP_TMP_IDX}
 
     ext_json=$(cat ${MRP_TMP_IDX})
     ext_id=$(getValueByJsonPath ".id" "${ext_json}")
@@ -167,7 +167,7 @@ function downloadFromUrlIfNotExists(){
     local MSG="${3}"
     if [ ! -e ${OUT_FILE} ]; then
         echo "Downloading ${MSG}"
-        curl --progress-bar --location ${DOWNLOAD_URL} --output ${OUT_FILE}
+        curl -k --progress-bar --location ${DOWNLOAD_URL} --output ${OUT_FILE}
     fi
 }
 
