@@ -155,7 +155,7 @@
       "user_config_json": "apollolake_user_config.json",
       "docker_base_image": "debian:10-slim",
       "compile_with": "toolkit_dev",
-      "redpill_lkm_make_target": "dev-v7",
+      "redpill_lkm_make_target": "test-v7",
       "downloads": {
         "kernel": {
           "url": "https://sourceforge.net/projects/dsgpl/files/Synology%20NAS%20GPL%20Source/25426branch/apollolake-source/linux-4.4.x.txz/download",
