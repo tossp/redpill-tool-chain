@@ -50,7 +50,7 @@ jobs:
           ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/ixgbe/rpext-index.json
           ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/vmxnet3/rpext-index.json
           ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/vmw_pvscsi/rpext-index.json
-
+          
       - name: 编译引导镜像
         run: ./redpill_tool_chain.sh auto ${{matrix.platform}}-${{matrix.version}}
 
