@@ -203,7 +203,7 @@ Actions: build, auto, run, clean
 
 - add:      To install extension you need to know its index file location and nothing more.
             eg: add 'https://example.com/some-extension/rpext-index.json'
-            redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/r8168/releases/ds918p_42218.json
+            redpill_tool_chain.sh add https://github.com/T-REX-XP/rp-ext-realtek/raw/main/r8169/releases/ds918p_41890.json
 
 - del:      To remove an already installed extension you need to know its ID.
             eg: del 'example_dev.some_extension'
