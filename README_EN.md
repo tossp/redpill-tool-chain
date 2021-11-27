@@ -2,7 +2,9 @@
 
 [中文说明](README.md "English")
 THX @haydibe
-# Inofficial redpill toolchain image builder
+
+## Inofficial redpill toolchain image builder
+
 - Creates a OCI Container (~= Docker) image based tool chain.
 - Takes care of downloading (and caching) the required sources to compile redpill.ko and the required os packages that the build process depends on.
 - Caches .pat downloads inside the container on the host.
@@ -15,23 +17,23 @@ THX @haydibe
 - Allows to configure if the build cache is used or not ("docker.use_build_cache")
 - Allows to specify if "clean all" should delete all or only orphaned images.
 - The default `global_config.json` contains platform versions provided by the official redpill-load image. Please create new <platform_version> and point them to custom repositories if wanted.
-- Supports to add custom mounts (set`"docker.use_custom_bind_mounts":` to `"true"` and add your custom bind-mounts in `"docker.custom_bind_mounts"`). 
+- Supports to add custom mounts (set`"docker.use_custom_bind_mounts":` to `"true"` and add your custom bind-mounts in `"docker.custom_bind_mounts"`).
 - Performs integrity check of required kernel/toolkit-dev required for the image build
-- Supports the make target to specify the redpill.ko build configuration. Set <platform version>.redpill_lkm_make_target to `dev-v6`, `dev-v7`, `test-v6`, `test-v7`, `prod-v6` or `prod-v7`.
+- Supports the make target to specify the redpill.ko build configuration. Set `<platform version>.redpill_lkm_make_target` to `dev-v6`, `dev-v7`, `test-v6`, `test-v7`, `prod-v6` or `prod-v7`.
   Make sure to use the -v6 ones on DSM6 build and -v7 on DSM7 build. By default the targets `dev-v6` and `dev-v7` are used.
 
   - dev: all symbols included, debug messages included
   - test: fully stripped with only warning & above (no debugs or info)
   - prod: fully stripped with no debug messages
 
-
 ## Changes
+
 - added the additionaly required make target when building redpill.ko
-- added a new configuration item in <platform version>.redpill_lkm_make_target to set the build target
+- added a new configuration item in `<platform version>.redpill_lkm_make_target` to set the build target
 
 ## Usage
 
-1. Edit `<platform>_user_config.json` that matches your <platform_version> according https://github.com/RedPill-TTG/redpill-load and place it in the same folder as redpill_tool_chain.sh
+1. Edit `<platform>_user_config.json` that matches your <platform_version> according [redpill-load](https://github.com/RedPill-TTG/redpill-load) and place it in the same folder as redpill_tool_chain.sh
 2. Build the image for the platform and version you want:
    `./redpill_tool_chain.sh build <platform_version>`
 3. Run the image for the platform and version you want:
@@ -47,9 +49,10 @@ Note3: Please do not ask to add <platform_version> with configurations for other
 Feel free to modify any values in `global_config.json` that suite your needs!
 
 Examples:
+
 ### See Help text
 
-```
+```txt
 ./redpill_tool_chain.sh
 Usage: ./redpill_tool_chain.sh <action> <platform version>
 
