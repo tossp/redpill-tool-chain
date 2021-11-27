@@ -21,3 +21,4 @@ fi
 echo -e "Boot image:\t\t${PWD}/${IMG_FILE}"
 echo -e "Target block device:\t${T}"
 dd if="${IMG_FILE}" of="${T}" bs=4M conv=nocreat oflag=sync status=progress
+
