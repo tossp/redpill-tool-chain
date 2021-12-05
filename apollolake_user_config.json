@@ -1,0 +1,17 @@
+{
+  "extra_cmdline": {
+    "pid": "0x5678",
+    "vid": "0xFFFF",
+    "sn": "1941PDN788107",
+    "mac1": "001132AE2B81",
+    "mac2": "001132AE2B82"
+  },
+  "synoinfo": {
+    "maxdisks": "24",
+    "maxlanport": "4",
+    "usbportcfg": "0x30000",
+    "esataportcfg": "0x1c",
+    "internalportcfg": "0x3"
+  },
+  "ramdisk_copy": {}
+}
