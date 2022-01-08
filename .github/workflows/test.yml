@@ -23,7 +23,7 @@ jobs:
       - name: 配置引导镜像
         run: |
           cp sample_user_config.json ${{matrix.platform}}_user_config.json
-          sed -i -e 's\0x0001\0x6544\g' -e 's\0x46f4\0x0930\g' -e 's\1234XXX123\${{ secrets.DS918_JZ_SN }}\g' -e 's\XXYYXXYYXXYY\${{ secrets.DS918_JZ_MAC }}\g' ${{matrix.platform}}_user_config.json
+          sed -i -e 's\0x0001\0x5581\g' -e 's\0x46f4\0x0781\g' -e 's\1234XXX123\${{ secrets.DS918_JZ_SN }}\g' -e 's\XXYYXXYYXXYY\${{ secrets.DS918_JZ_MAC }}\g' ${{matrix.platform}}_user_config.json
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-virtio/rpext-index.json
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-acpid/rpext-index.json
 
