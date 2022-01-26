@@ -26,7 +26,7 @@ jobs:
         run: chmod 0755 ./redpill_tool_chain.sh
         
       - name: NIC driver
-        run : ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/e1000e/rpext-index.json
+        run : ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/r8168/rpext-index.json
 
       - name: Build docker image
         run: ./redpill_tool_chain.sh build apollolake-7.0.1-42218
