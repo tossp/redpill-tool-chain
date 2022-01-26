@@ -29,10 +29,10 @@ jobs:
         run : ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/r8168/rpext-index.json
 
       - name: Build docker image
-        run: ./redpill_tool_chain.sh build bromolow-6.2.4-25556
+        run: ./redpill_tool_chain.sh build bromolow-7.0.1-42218
 
       - name: Create dsm image
-        run: ./redpill_tool_chain.sh auto bromolow-6.2.4-25556
+        run: ./redpill_tool_chain.sh auto bromolow-7.0.1-42218
 
       - uses: actions/upload-artifact@v2
         with:
