@@ -25,8 +25,14 @@ jobs:
       - name: Chmod
         run: chmod 0755 ./redpill_tool_chain.sh
         
-      - name: NIC driver
+      - name: NIC driver RTL
         run : ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/r8168/rpext-index.json
+      
+      - name : NIC driver Intel e1000
+        run : ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/e1000e/rpext-index.json
+        
+      - name : NIC driver Intel igb
+        run : ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/igb/rpext-index.json
 
       - name: Build docker image
         run: ./redpill_tool_chain.sh build bromolow-7.0.1-42218
