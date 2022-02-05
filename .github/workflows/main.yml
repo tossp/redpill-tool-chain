@@ -33,7 +33,10 @@ jobs:
         
       - name : NIC driver Intel igb
         run : ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/igb/rpext-index.json
-
+      
+      - name : NIC driver Intel RTL8125
+        run : ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/r8125/rpext-index.json
+        
       - name: Build docker image
         run: ./redpill_tool_chain.sh build bromolow-7.0.1-42218
 
