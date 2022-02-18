@@ -36,6 +36,10 @@ build_redpill_load:
 		pushd $(REDPILL_LOAD_SRC) && \
 		./build-loader.sh 'DS3615xs' '$(TARGET_VERSION)-$(TARGET_REVISION)'; \
 	fi
+	@if [ "$(TARGET_PLATFORM)" == "broadwell" ]; then \
+		pushd $(REDPILL_LOAD_SRC) && \
+		./build-loader.sh 'DS3617xs' '$(TARGET_VERSION)-$(TARGET_REVISION)'; \
+	fi
 	@if [ "$(TARGET_PLATFORM)" == "apollolake" ]; then \
 		pushd $(REDPILL_LOAD_SRC) && \
 		./build-loader.sh 'DS918+' '$(TARGET_VERSION)-$(TARGET_REVISION)'; \
