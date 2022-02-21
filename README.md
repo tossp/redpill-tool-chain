@@ -121,3 +121,7 @@ pocopico.mpt3sas
 thethorgroup.boot-wait
 thethorgroup.virtio
 ```
+
+## 更多细节
+
+查看[test.yml](https://github.com/tossp/redpill-tool-chain/blob/e7ed920171194f35e577990809a167baa0b9d48c/.github/workflows/test.yml)文件
