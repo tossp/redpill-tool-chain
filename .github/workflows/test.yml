@@ -60,8 +60,10 @@ jobs:
           sed -i -e 's\0x0001\0x0002\g' -e 's\0x46f4\0x0002\g' ${{matrix.platform}}_user_config.json
           # 调整SN和MAC
           sed -i -e 's\1234XXX123\0123456789\g' -e 's\XXYYXXYYXXYY\00AAAAAAAAAA\g' ${{matrix.platform}}_user_config.json
-          # 添加更多的MAC和调整synoinfo
-          -e 's/00AAAAAAAAAA"/&,\n\t"mac2": "00BBBBBBBBBB",\n\t"netif_num": 2/' -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "2"\n    },/' ${{matrix.platform}}_user_config.json
+          # 添加第二张网卡mac并设置网卡数量
+          sed -i -e 's/00AAAAAAAAAA"/&,\n\t"mac2": "00BBBBBBBBBB",\n\t"netif_num": 2/' ${{matrix.platform}}_user_config.json
+          # 调整synoinfo
+          sed -i -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "2"\n    },/' ${{matrix.platform}}_user_config.json
           # 添加驱动
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-acpid/rpext-index.json
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-virtio/rpext-index.json
