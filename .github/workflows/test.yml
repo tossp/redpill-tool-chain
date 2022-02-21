@@ -1,18 +1,17 @@
 name: 测试构建
 
 on:
-  - push
-
-workflow_dispatch:
-  inputs:
-    days:
-      description: '保留天数'
-      required: true
-      default: 1
-    minimum_runs:
-      description: '最小保留数量.'
-      required: true
-      default: 6
+  push:
+  workflow_dispatch:
+    inputs:
+      days_runs:
+        description: '保留天数'
+        required: true
+        default: '1'
+      minimum_runs:
+        description: '最小保留数量.'
+        required: true
+        default: '6'
 
 jobs:
   build:
@@ -83,6 +82,6 @@ jobs:
         with:
           token: ${{ github.token }}
           repository: ${{ github.repository }}
-          retain_days: 30
-          keep_minimum_runs: 6
+          retain_days: ${{ github.event.inputs.days_runs }}
+          keep_minimum_runs: ${{ github.event.inputs.minimum_runs }}
 
