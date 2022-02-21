@@ -61,4 +61,9 @@ jobs:
           path: images/redpill-DS[39]*.img
           if-no-files-found: error
 
+      - name: 删除旧的工作流
+        uses: GitRML/delete-workflow-runs@main
+        with:
+          retain_days: 1
+          keep_minimum_runs: 7
 
