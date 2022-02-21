@@ -1,4 +1,4 @@
-ARG DOCKER_BASE_IMAGE=ubuntu:20.04
+ARG DOCKER_BASE_IMAGE=debian:8
 # extract kernel and toolkit dev
 FROM ${DOCKER_BASE_IMAGE} AS extract
 

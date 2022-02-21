@@ -2,7 +2,7 @@
 
 这是一个测试项目，可能会有不可预测的事情发生（比如：毁损数据、烧毁硬件等等），请**谨慎使用**。
 
-[English](README_EN.md "English")
+[English](README_en.md "English")
 
 感谢 @haydibe 提供 RedPill Tool Chain
 

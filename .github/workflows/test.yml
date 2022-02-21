@@ -22,8 +22,14 @@ jobs:
            version: 7.0-41890
          - platform: apollolake
            version: 7.0.1-42218
+         - platform: broadwell
+           version: 6.2.4-25556
+         - platform: broadwell
+           version: 6.2.4-25556u2
+         - platform: broadwell
+           version: 7.0.1-42218
     steps:
-      - name: 准备结束
+      - name: 检出项目文件
         uses: actions/checkout@v2
 
       - name: 缓存加速
