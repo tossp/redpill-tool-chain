@@ -111,6 +111,8 @@ bromolow-7.0.1-42218
 apollolake-6.2.4-25556
 apollolake-7.0-41890
 apollolake-7.0.1-42218
+broadwell-7.0.1-42218
+broadwellnk-7.0.1-42218
 
 Custom Extensions:
 ---------------------
