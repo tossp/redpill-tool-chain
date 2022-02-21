@@ -2,16 +2,7 @@ name: 测试构建
 
 on:
   push:
-  workflow_dispatch:
-    inputs:
-      days_runs:
-        description: '保留天数'
-        required: true
-        default: '1'
-      minimum_runs:
-        description: '最小保留数量.'
-        required: true
-        default: '6'
+    branches: [ master ]
 
 jobs:
   build:
@@ -37,8 +28,7 @@ jobs:
            version: 7.0.1-42218
          - platform: broadwellnk
            version: 7.0.1-42218
-         - platform: geminilake
-           version: 7.0.1-42218
+
     steps:
       - name: 检出项目文件
         uses: actions/checkout@v2
@@ -86,6 +76,6 @@ jobs:
         with:
           token: ${{ github.token }}
           repository: ${{ github.repository }}
-          retain_days: ${{ github.event.inputs.days_runs }}
-          keep_minimum_runs: ${{ github.event.inputs.minimum_runs }}
+          retain_days: 3
+          keep_minimum_runs: 6
 
