@@ -37,6 +37,8 @@ jobs:
            version: 7.0.1-42218
          - platform: broadwellnk
            version: 7.0.1-42218
+         - platform: geminilake
+           version: 7.0.1-42218
     steps:
       - name: 检出项目文件
         uses: actions/checkout@v2
@@ -64,7 +66,7 @@ jobs:
           sed -i -e 's/00AAAAAAAAAA"/&,\n\t"mac2": "00BBBBBBBBBB",\n\t"netif_num": 2/' ${{matrix.platform}}_user_config.json
           # 调整synoinfo
           sed -i -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "2"\n    },/' ${{matrix.platform}}_user_config.json
-          # 添加驱动
+          # 添加扩展驱动
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-acpid/rpext-index.json
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-virtio/rpext-index.json
 

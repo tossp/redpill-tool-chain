@@ -48,6 +48,10 @@ build_redpill_load:
 		pushd $(REDPILL_LOAD_SRC) && \
 		./build-loader.sh 'DS3622xs+' '$(TARGET_VERSION)-$(TARGET_REVISION)'; \
 	fi
+	@if [ "$(TARGET_PLATFORM)" == "geminilake" ]; then \
+		pushd $(REDPILL_LOAD_SRC) && \
+		./build-loader.sh 'DS920+' '$(TARGET_VERSION)-$(TARGET_REVISION)'; \
+	fi
 
 .PHONY: build_all
 build_all: build_redpill_lkm build_redpill_load

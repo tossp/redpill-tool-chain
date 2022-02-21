@@ -113,6 +113,7 @@ apollolake-7.0-41890
 apollolake-7.0.1-42218
 broadwell-7.0.1-42218
 broadwellnk-7.0.1-42218
+geminilake-7.0.1-42218
 
 Custom Extensions:
 ---------------------
