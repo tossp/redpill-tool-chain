@@ -29,9 +29,8 @@ jobs:
            version: 7.0.1-42218
          - platform: broadwellnk
            version: 7.0.1-42218
-           # 等待上游确认路径
-        #  - platform: geminilake
-        #    version: 7.0.1-42218
+         - platform: geminilake
+           version: 7.0.1-42218
 
     steps:
       - name: 检出项目文件
