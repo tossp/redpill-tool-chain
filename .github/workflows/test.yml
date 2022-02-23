@@ -13,21 +13,7 @@ jobs:
       matrix:
        include:
       #  两行一组，删除不需要的版本
-         - platform: bromolow
-           version: 6.2.4-25556
-         - platform: bromolow
-           version: 7.0-41222
-         - platform: bromolow
-           version: 7.0.1-42218
          - platform: apollolake
-           version: 6.2.4-25556
-         - platform: apollolake
-           version: 7.0-41890
-         - platform: apollolake
-           version: 7.0.1-42218
-         - platform: broadwell
-           version: 7.0.1-42218
-         - platform: broadwellnk
            version: 7.0.1-42218
            # 等待上游确认路径
         #  - platform: geminilake
