@@ -71,9 +71,7 @@ jobs:
       - name: 添加 jumkey.misc
         if: endsWith(matrix.version,'42218')
         run: |
-          ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-dtb/rpext-index.json
-          echo '!!!Create your own device tree binary.!!!'
-          echo 'see https://github.com/jumkey/redpill-load/blob/develop/redpill-dtb/README.md'
+          /redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/rpext-index.json
 
       - name: 添加 jumkey.dtb
         if: matrix.platform == 'geminilake'
