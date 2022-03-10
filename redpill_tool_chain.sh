@@ -307,7 +307,7 @@ if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ID}" != "all" ]]; then
     REDPILL_LOAD_REPO=$(getValueByJsonPath ".redpill_load.source_url" "${BUILD_CONFIG}")
     REDPILL_LOAD_BRANCH=$(getValueByJsonPath ".redpill_load.branch" "${BUILD_CONFIG}")
 
-    EXTRACTED_KSRC="/${TARGET_PLATFORM}.linux*"
+    EXTRACTED_KSRC="/linux*"
     if [ "${COMPILE_WITH}" == "toolkit_dev" ]; then
         EXTRACTED_KSRC="/usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${DSM_VERSION}/build/"
     fi
@@ -340,9 +340,6 @@ case "${ACTION}" in
     auto)   runContainer "auto"
             ;;
     clean)  clean
-            ;;
-    config) cp sample_user_config.json ${USER_CONFIG_JSON}
-            echo "!!!edit '${USER_CONFIG_JSON}'!!!"
             ;;
     *)      if [ ! -z ${ACTION} ];then
                 echo "Error: action ${ACTION} does not exist"
