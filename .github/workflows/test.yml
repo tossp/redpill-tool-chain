@@ -50,7 +50,7 @@ jobs:
 
       - name: 配置引导镜像
         run: |
-          cp sample_user_config.json ${{matrix.platform}}_user_config.json
+          ./redpill_tool_chain.sh config ${{matrix.platform}}-${{matrix.version}}
 
           # 调整VID和PID
           sed -i -e 's\0x0001\0x0002\g' -e 's\0x46f4\0x0002\g' ${{matrix.platform}}_user_config.json

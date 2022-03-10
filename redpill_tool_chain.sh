@@ -27,7 +27,7 @@ function getValueByJsonPath(){
 }
 
 function buildImage(){
-    local KERNEL_SRC_FILENAME=$( [ "${COMPILE_WITH}" == "kernel" ] && echo "${KERNEL_FILENAME}" || echo "${TOOLKIT_DEV_FILENAME}")
+    local KERNEL_SRC_FILENAME=$( [ "${COMPILE_WITH}" == "kernel" ] && echo "${TARGET_PLATFORM}.${KERNEL_FILENAME}" || echo "${TOOLKIT_DEV_FILENAME}")
     local KERNEL_SRC_FILENAME_SHA256=$( [ "${COMPILE_WITH}" == "kernel" ] && echo "${KERNEL_DOWNLOAD_SHA256}" || echo "${TOOLKIT_DEV_DOWNLOAD_SHA256}")
     checkFileSHA256Checksum "${DOWNLOAD_FOLDER}/${KERNEL_SRC_FILENAME}" "${KERNEL_SRC_FILENAME_SHA256}"
 
@@ -169,7 +169,7 @@ function downloadFromUrlIfNotExists(){
     local OUT_FILE="${2}"
     local MSG="${3}"
     if [ ! -e ${OUT_FILE} ]; then
-        echo "Downloading ${MSG}"
+        echo "Downloading ${MSG} '${OUT_FILE}'"
         curl -k --progress-bar --location ${DOWNLOAD_URL} --output ${OUT_FILE}
     fi
 }
@@ -340,6 +340,9 @@ case "${ACTION}" in
     auto)   runContainer "auto"
             ;;
     clean)  clean
+            ;;
+    config) cp sample_user_config.json ${USER_CONFIG_JSON}
+            echo "!!!edit '${USER_CONFIG_JSON}'!!!"
             ;;
     *)      if [ ! -z ${ACTION} ];then
                 echo "Error: action ${ACTION} does not exist"
