@@ -1,4 +1,4 @@
-name: 测试构建
+name: 构建
 
 on:
   push:
