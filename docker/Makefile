@@ -11,6 +11,7 @@ export REDPILL_LKM_MAKE_TARGET := ${REDPILL_LKM_MAKE_TARGET}
 export TARGET_PLATFORM         := ${TARGET_PLATFORM}
 export TARGET_VERSION          := ${TARGET_VERSION}
 export TARGET_REVISION         := ${TARGET_REVISION}
+export TARGET_NAME         		 := ${TARGET_NAME}
 export LINUX_SRC               := ${LINUX_SRC}
 
 .PHONY: all
@@ -32,26 +33,7 @@ build_redpill_load:
 	echo "#############################################"
 	@read -a KVERS <<< "$$(modinfo --field=vermagic redpill-lkm/redpill.ko)" && \
 	cp -f $(REDPILL_LKM_SRC)/redpill.ko $(REDPILL_LOAD_SRC)/ext/rp-lkm/redpill-linux-v$${KVERS[0]}.ko
-	@if [ "$(TARGET_PLATFORM)" == "bromolow" ]; then \
-		pushd $(REDPILL_LOAD_SRC) && \
-		./build-loader.sh 'DS3615xs' '$(TARGET_VERSION)-$(TARGET_REVISION)'; \
-	fi
-	@if [ "$(TARGET_PLATFORM)" == "apollolake" ]; then \
-		pushd $(REDPILL_LOAD_SRC) && \
-		./build-loader.sh 'DS918+' '$(TARGET_VERSION)-$(TARGET_REVISION)'; \
-	fi
-	@if [ "$(TARGET_PLATFORM)" == "broadwell" ]; then \
-		pushd $(REDPILL_LOAD_SRC) && \
-		./build-loader.sh 'DS3617xs' '$(TARGET_VERSION)-$(TARGET_REVISION)'; \
-	fi
-	@if [ "$(TARGET_PLATFORM)" == "broadwellnk" ]; then \
-		pushd $(REDPILL_LOAD_SRC) && \
-		./build-loader.sh 'DS3622xs+' '$(TARGET_VERSION)-$(TARGET_REVISION)'; \
-	fi
-	@if [ "$(TARGET_PLATFORM)" == "geminilake" ]; then \
-		pushd $(REDPILL_LOAD_SRC) && \
-		./build-loader.sh 'DS920+' '$(TARGET_VERSION)-$(TARGET_REVISION)'; \
-	fi
+	pushd $(REDPILL_LOAD_SRC) && ./build-loader.sh '$(TARGET_NAME)' '$(TARGET_VERSION)-$(TARGET_REVISION)'
 
 .PHONY: build_all
 build_all: build_redpill_lkm build_redpill_load

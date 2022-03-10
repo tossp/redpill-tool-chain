@@ -30,6 +30,7 @@ ARG REDPILL_LOAD_SRC=/opt/redpill-load
 RUN git clone ${REDPILL_LKM_REPO}  -b ${REDPILL_LKM_BRANCH}  ${REDPILL_LKM_SRC} && \
     git clone ${REDPILL_LOAD_REPO} -b ${REDPILL_LOAD_BRANCH} ${REDPILL_LOAD_SRC}
 
+ARG TARGET_NAME
 ARG TARGET_PLATFORM
 ARG TARGET_VERSION
 ARG DSM_VERSION
@@ -43,6 +44,7 @@ ENV ARCH=x86_64 \
     LINUX_SRC=/opt/${COMPILE_WITH}-${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} \
     REDPILL_LKM_SRC=${REDPILL_LKM_SRC} \
     REDPILL_LOAD_SRC=${REDPILL_LOAD_SRC} \
+    TARGET_NAME=${TARGET_NAME} \
     TARGET_PLATFORM=${TARGET_PLATFORM} \
     TARGET_VERSION=${TARGET_VERSION} \
     TARGET_REVISION=${TARGET_REVISION} \
@@ -51,7 +53,7 @@ ENV ARCH=x86_64 \
 ARG EXTRACTED_KSRC
 COPY --from=extract ${EXTRACTED_KSRC} ${LINUX_SRC}
 
-RUN if [ "apollolake" = "$TARGET_PLATFORM" ]; then echo '+' > ${LINUX_SRC}/.scmversion; fi && \
+RUN if [ "apollolake" = "$TARGET_PLATFORM" ] || [ "broadwellnk" = "$TARGET_PLATFORM"  ] || [ "geminilake" = "$TARGET_PLATFORM" ]; then echo '+' > ${LINUX_SRC}/.scmversion; fi && \
     if [ "$COMPILE_WITH" = "kernel" ]; then \
         cp ${LINUX_SRC}/synoconfigs/${TARGET_PLATFORM} ${LINUX_SRC}/.config && \
         make -C ${LINUX_SRC} oldconfig && \

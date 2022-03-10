@@ -13,23 +13,23 @@ jobs:
       matrix:
        include:
       #  两行一组，删除不需要的版本
-         - platform: bromolow
+         - platform: ds3615xs
            version: 6.2.4-25556
-         - platform: bromolow
+         - platform: ds3615xs
            version: 7.0-41222
-         - platform: bromolow
+         - platform: ds3615xs
            version: 7.0.1-42218
-         - platform: apollolake
+         - platform: ds918p
            version: 6.2.4-25556
-         - platform: apollolake
+         - platform: ds918p
            version: 7.0-41890
-         - platform: apollolake
+         - platform: ds918p
            version: 7.0.1-42218
-         - platform: broadwell
+         - platform: ds3617xs
            version: 7.0.1-42218
-         - platform: broadwellnk
+         - platform: ds3622xsp
            version: 7.0.1-42218
-         - platform: geminilake
+         - platform: ds920p
            version: 7.0.1-42218
 
     steps:
@@ -74,7 +74,7 @@ jobs:
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/rpext-index.json
 
       - name: 添加 jumkey.dtb !!!Create your own device tree binary!!!
-        if: matrix.platform == 'geminilake'
+        if: matrix.platform == 'ds920p'
         run: |
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-dtb/rpext-index.json
           echo '!!!Create your own device tree binary!!!'

@@ -77,12 +77,15 @@ Actions: build, auto, run, clean
 
 Available platform versions:
 ---------------------
-bromolow-6.2.4-25556
-bromolow-7.0-41222
-bromolow-7.0.1-42218
-apollolake-6.2.4-25556
-apollolake-7.0-41890
-apollolake-7.0.1-42218
+ds3615xs-6.2.4-25556
+ds3615xs-7.0-41222
+ds3615xs-7.0.1-42218
+ds918p-6.2.4-25556
+ds918p-7.0-41890
+ds918p-7.0.1-42218
+ds3617xs-7.0.1-42218
+ds3622xsp-7.0.1-42218
+ds920p-7.0.1-42218
 
 Custom Extensions:
 ---------------------
@@ -102,22 +105,16 @@ thethorgroup.virtio
 
 ### Build toolchain image
 
-- For Bromolow 6.2.4   : `./redpill_tool_chain.sh build bromolow-6.2.4-25556`
-- For Bromolow 7.0     : `./redpill_tool_chain.sh build bromolow-7.0-41222`
-- For Apollolake 6.2.4 : `./redpill_tool_chain.sh build apollolake-6.2.4-25556`
-- For Apollolake 7.0   : `./redpill_tool_chain.sh build apollolake-7.0-41890`
+- For Bromolow 6.2.4   : `./redpill_tool_chain.sh build ds3615xs-6.2.4-25556`
+- For Apollolake 7.0   : `./redpill_tool_chain.sh build ds918p-7.0-41890`
 
 ### Create redpill bootloader image
 
-- For Bromolow 6.2.4   : `./redpill_tool_chain.sh auto bromolow-6.2.4-25556`
-- For Bromolow 7.0     : `./redpill_tool_chain.sh auto bromolow-7.0-41222`
-- For Apollolake 6.2.4 : `./redpill_tool_chain.sh auto apollolake-6.2.4-25556`
-- For Apollolake 7.0   : `./redpill_tool_chain.sh auto apollolake-7.0-41890`
+- For Bromolow 6.2.4   : `./redpill_tool_chain.sh auto ds3615xs-6.2.4-25556`
+- For Apollolake 7.0   : `./redpill_tool_chain.sh auto ds918p-7.0-41890`
 
 ### Clean old redpill bootloader images and build cache
 
-- For Bromolow 6.2.4   : `./redpill_tool_chain.sh clean bromolow-6.2.4-25556`
-- For Bromolow 7.0     : `./redpill_tool_chain.sh clean bromolow-7.0-41222`
-- For Apollolake 6.2.4 : `./redpill_tool_chain.sh clean apollolake-6.2.4-25556`
-- For Apollolake 7.0   : `./redpill_tool_chain.sh clean apollolake-7.0-41890`
+- For Bromolow 6.2.4   : `./redpill_tool_chain.sh clean ds3615xs-6.2.4-25556`
+- For Apollolake 7.0   : `./redpill_tool_chain.sh clean ds918p-7.0-41890`
 - For all              : `./redpill_tool_chain.sh clean all`

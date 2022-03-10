@@ -20,7 +20,8 @@
   },
   "build_configs": [
     {
-      "id": "bromolow-6.2.4-25556",
+      "id": "ds3615xs-6.2.4-25556",
+      "platform_name": "DS3615xs",
       "platform_version": "bromolow-6.2.4-25556",
       "user_config_json": "bromolow_user_config.json",
       "docker_base_image": "debian:8-slim",
@@ -46,7 +47,8 @@
       }
     },
     {
-      "id": "bromolow-7.0-41222",
+      "id": "ds3615xs-7.0-41222",
+      "platform_name": "DS3615xs",
       "platform_version": "bromolow-7.0-41222",
       "user_config_json": "bromolow_user_config.json",
       "docker_base_image": "debian:8-slim",
@@ -72,7 +74,8 @@
       }
     },
     {
-      "id": "bromolow-7.0.1-42218",
+      "id": "ds3615xs-7.0.1-42218",
+      "platform_name": "DS3615xs",
       "platform_version": "bromolow-7.0.1-42218",
       "user_config_json": "bromolow_user_config.json",
       "docker_base_image": "debian:8-slim",
@@ -98,7 +101,8 @@
       }
     },
     {
-      "id": "apollolake-6.2.4-25556",
+      "id": "ds918p-6.2.4-25556",
+      "platform_name": "DS918+",
       "platform_version": "apollolake-6.2.4-25556",
       "user_config_json": "apollolake_user_config.json",
       "docker_base_image": "debian:8-slim",
@@ -124,7 +128,8 @@
       }
     },
     {
-      "id": "apollolake-7.0-41890",
+      "id": "ds918p-7.0-41890",
+      "platform_name": "DS918+",
       "platform_version": "apollolake-7.0-41890",
       "user_config_json": "apollolake_user_config.json",
       "docker_base_image": "debian:10-slim",
@@ -150,7 +155,8 @@
       }
     },
     {
-      "id": "apollolake-7.0.1-42218",
+      "id": "ds918p-7.0.1-42218",
+      "platform_name": "DS918+",
       "platform_version": "apollolake-7.0.1-42218",
       "user_config_json": "apollolake_user_config.json",
       "docker_base_image": "debian:10-slim",
@@ -176,7 +182,8 @@
       }
     },
     {
-      "id": "broadwell-7.0.1-42218",
+      "id": "ds3617xs-7.0.1-42218",
+      "platform_name": "DS3617xs",
       "platform_version": "broadwell-7.0.1-42218",
       "user_config_json": "broadwell_user_config.json",
       "docker_base_image": "debian:8-slim",
@@ -202,7 +209,8 @@
       }
     },
     {
-      "id": "broadwellnk-7.0.1-42218",
+      "id": "ds3622xsp-7.0.1-42218",
+      "platform_name": "DS3622xs+",
       "platform_version": "broadwellnk-7.0.1-42218",
       "user_config_json": "broadwellnk_user_config.json",
       "docker_base_image": "debian:10-slim",
@@ -228,7 +236,8 @@
       }
     },
     {
-      "id": "geminilake-7.0.1-42218",
+      "id": "ds920p-7.0.1-42218",
+      "platform_name": "DS920+",
       "platform_version": "geminilake-7.0.1-42218",
       "user_config_json": "geminilake_user_config.json",
       "docker_base_image": "debian:10-slim",
