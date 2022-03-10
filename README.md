@@ -11,7 +11,8 @@
 ## 关于项目?
 
 - 基于[RedPill-TTG](https://github.com/RedPill-TTG)源码制作
-- 为apollolake提供适当的DSM7支持 ( 感谢 [@jumkey](https://github.com/jumkey) )
+- 为`DS918+`提供适当的支持 ( 感谢 [@jumkey](https://github.com/jumkey) )
+- 为`DS3617xs`提供适当的支持 ( 感谢 [@jimmyGALLAND](https://github.com/jimmyGALLAND) )
 - 整理社区扩展驱动 ( 感谢 [@pocopico](https://github.com/pocopico) )
 - `redpill_lkm_make_target`字段的可选值有 `dev-v6`, `dev-v7`, `test-v6`, `test-v7`, `prod-v6` 或者 `prod-v7`，
   需要注意后缀为`-v6`的值用于 DSM6 版本构建， 需要注意后缀为`-v7`的值用于 DSM7 版本构建. 默认使用的是 `dev-v6` 和 `dev-v7`。
@@ -25,14 +26,14 @@
 
 ## 如何使用?
 
-1. 复制`sample_user_config.json`为`bromolow_user_config.json`或者`apollolake_user_config.json`
-1. 编辑`<platform>_user_config.json`比如 918+ 就编辑 `apollolake_user_config.json` 文件
+1. 复制`sample_user_config.json`为`ds3615xs_user_config.json`或者`ds918p_user_config.json`
+1. 编辑`<platform>_user_config.json`比如 918+ 就编辑 `ds918p_user_config.json` 文件
 1. 添加扩展驱动：
    比如 `redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/mpt3sas/rpext-index.json`
 1. 为你想要的平台和版本构建编译镜像:  
-   比如 `redpill_tool_chain.sh build apollolake-7.0-41890`
+   比如 `redpill_tool_chain.sh build ds918p-7.0-41890`
 1. 为你想要的平台和版本构建引导:
-   比如 `redpill_tool_chain.sh auto apollolake-7.0-41890`
+   比如 `redpill_tool_chain.sh auto ds918p-7.0-41890`
 
 `redpill_tool_chain.sh auto`运行结束之后，将会在宿主机的`./image`文件夹中生成 RedPill引导镜像。
 
@@ -122,6 +123,6 @@ thethorgroup.virtio
 
 ## 更多细节
 
-编译`geminilake`需要加入`jumkey.dtb`扩展并参考[这里](https://github.com/jumkey/redpill-load/blob/develop/redpill-dtb/README.md)创建设备的二进制设备树
+编译`DS920+`和`DS1621+`需要加入`jumkey.dtb`扩展并参考[这里](https://github.com/jumkey/redpill-load/blob/develop/redpill-dtb/README.md)创建设备的二进制设备树
 
 查看基于[test.yml](https://github.com/tossp/redpill-tool-chain/blob/master/.github/workflows/test.yml)的使用[示例](https://github.com/tossp/redpill-tool-chain/actions/workflows/test.yml)
