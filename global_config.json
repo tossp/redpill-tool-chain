@@ -265,7 +265,7 @@
     {
       "id": "ds1621p-7.0.1-42218",
       "platform_name": "DS1621+",
-      "platform_version": "geminilake-7.0.1-42218",
+      "platform_version": "v1000-7.0.1-42218",
       "user_config_json": "ds1621p_user_config.json",
       "docker_base_image": "debian:10-slim",
       "compile_with": "toolkit_dev",
