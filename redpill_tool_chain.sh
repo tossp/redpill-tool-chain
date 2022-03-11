@@ -191,7 +191,7 @@ function showHelp(){
 cat << EOF
 Usage: ${0} <action> <platform version>
 
-Actions: build, auto, run, clean
+Actions: build, auto, run, clean, add, del, sn
 
 - build:    Build the toolchain image for the specified platform version.
 
@@ -209,6 +209,10 @@ Actions: build, auto, run, clean
 
 - del:      To remove an already installed extension you need to know its ID.
             eg: del 'example_dev.some_extension'
+
+- sn:       Generates a serial number and mac address for the following platforms
+            DS3615xs DS3617xs DS916+ DS918+ DS920+ DS3622xs+ FS6400 DVA3219 DVA3221 DS1621+
+            eg: sn ds920p
 
 Available platform versions:
 ---------------------
@@ -272,7 +276,7 @@ fi
 ACTION=${1}
 ID=${2}
 
-if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ID}" != "all" ]]; then
+if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ACTION}" != "sn" && "${ID}" != "all" ]]; then
     BUILD_CONFIG=$(getValueByJsonPath ".build_configs[] | select(.id==\"${ID}\")" "${CONFIG}")
     if [ -z "${BUILD_CONFIG}" ];then
         echo "Error: Platform version ${ID} not specified in global_config.json"
@@ -312,7 +316,7 @@ if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ID}" != "all" ]]; then
         EXTRACTED_KSRC="/usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${DSM_VERSION}/build/"
     fi
 else
-    if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ACTION}" != "clean" ]]; then
+    if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ACTION}" != "sn" && "${ACTION}" != "clean" ]]; then
         echo "All is not supported for action \"${ACTION}\""
         exit 1
     fi
@@ -340,6 +344,8 @@ case "${ACTION}" in
     auto)   runContainer "auto"
             ;;
     clean)  clean
+            ;;
+    sn)     ./serialnumbergen.sh `echo "${2}" | tr 'a-z' 'A-Z' | tr 'P' '+'`
             ;;
     *)      if [ ! -z ${ACTION} ];then
                 echo "Error: action ${ACTION} does not exist"

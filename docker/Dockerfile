@@ -53,7 +53,7 @@ ENV ARCH=x86_64 \
 ARG EXTRACTED_KSRC
 COPY --from=extract ${EXTRACTED_KSRC} ${LINUX_SRC}
 
-RUN if [ "apollolake" = "$TARGET_PLATFORM" ] || [ "broadwellnk" = "$TARGET_PLATFORM"  ] || [ "geminilake" = "$TARGET_PLATFORM" ] || [ "v1000" = "$TARGET_PLATFORM" ]; then echo '+' > ${LINUX_SRC}/.scmversion; fi && \
+RUN if [ "apollolake" = "$TARGET_PLATFORM" ] || [ "broadwellnk" = "$TARGET_PLATFORM"  ] || [ "geminilake" = "$TARGET_PLATFORM" ] || [ "v1000" = "$TARGET_PLATFORM" ] || [ "denverton" = "$TARGET_PLATFORM" ]; then echo '+' > ${LINUX_SRC}/.scmversion; fi && \
     if [ "$COMPILE_WITH" = "kernel" ]; then \
         cp ${LINUX_SRC}/synoconfigs/${TARGET_PLATFORM} ${LINUX_SRC}/.config && \
         make -C ${LINUX_SRC} oldconfig && \

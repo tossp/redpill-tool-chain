@@ -58,7 +58,7 @@ Examples:
 ./redpill_tool_chain.sh
 Usage: ./redpill_tool_chain.sh <action> <platform version>
 
-Actions: build, auto, run, clean
+Actions: build, auto, run, clean, add, del, sn
 
 - build:    Build the toolchain image for the specified platform version.
 
@@ -77,6 +77,10 @@ Actions: build, auto, run, clean
 - del:      To remove an already installed extension you need to know its ID.
             eg: del 'example_dev.some_extension'
 
+- sn:       Generates a serial number and mac address for the following platforms
+            DS3615xs DS3617xs DS916+ DS918+ DS920+ DS3622xs+ FS6400 DVA3219 DVA3221 DS1621+
+            eg: sn ds920p
+
 Available platform versions:
 ---------------------
 ds3615xs-6.2.4-25556
@@ -89,12 +93,17 @@ ds3617xs-7.0.1-42218
 ds3622xsp-7.0.1-42218
 ds920p-7.0.1-42218
 ds1621p-7.0.1-42218
+dva3221-7.0.1-42218
 
 Custom Extensions:
 ---------------------
+jumkey.acpid2
 pocopico.mpt3sas
+pocopico.vmxnet3
 thethorgroup.boot-wait
 thethorgroup.virtio
+
+Check global_settings.json for settings.
 ```
 
 ### Custom extended driver management
