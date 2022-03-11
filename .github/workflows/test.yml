@@ -1,8 +1,14 @@
 name: 构建
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ master ]
+    branches:
+      - master
+    paths:
+      - 'docker/**'
+      - '**.sh'
+      - '**.json'
 
 jobs:
   build:
@@ -12,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
        include:
-      #  两行一组，删除不需要的版本
+        #  两行一组，删除不需要的版本
          - platform: ds3615xs
            version: 6.2.4-25556
          - platform: ds3615xs
@@ -60,8 +66,8 @@ jobs:
           sed -i -e 's\0x0001\0x0002\g' -e 's\0x46f4\0x0002\g' ${{matrix.platform}}_user_config.json
 
           # 调整SN和MAC 最好使用 actions secrets 引入
-          use_sn=`./redpill_tool_chain.sh sn ${{matrix.platform}} | grep 'Serial Number' | awk '{print $3}'`
-          sed -i -e "s/1234XXX123/${use_sn}/g" -e 's/XXYYXXYYXXYY/0011323D47F7/g' ${{matrix.platform}}_user_config.json
+          sn=`./redpill_tool_chain.sh sn ${{matrix.platform}} | grep 'Serial Number' | awk '{print $3}'`
+          sed -i -e "s/1234XXX123/${sn}/g" -e 's/XXYYXXYYXXYY/0011323D47F7/g' ${{matrix.platform}}_user_config.json
 
           # 添加第二张网卡mac并设置网卡数量
           sed -i -e 's/0011323D47F7"/&,\n\t"mac2": "0011323D47F8",\n\t"netif_num": 2/' ${{matrix.platform}}_user_config.json
