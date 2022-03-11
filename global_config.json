@@ -300,11 +300,11 @@
       "downloads": {
         "kernel": {
           "url": "https://sourceforge.net/projects/dsgpl/files/Synology%20NAS%20GPL%20Source/25426branch/denverton-source/linux-4.4.x.txz/download",
-          "sha256": "ac532ebb221d9c55f78236d57288ac31d410dde01f1453f60b0c502333fdf107"
+          "sha256": "05d41c2d29ef0c41acb316b4aae1bdec85457f53de50d64956fbf66a3c4abeff"
         },
         "toolkit_dev": {
           "url": "https://sourceforge.net/projects/dsgpl/files/toolkit/DSM7.0/ds.denverton-7.0.dev.txz/download",
-          "sha256": "6108f9f7b7f0a13ee985314aef9419303375ab7ded4112be991590339b66ecd1"
+          "sha256": "6dc6818bad28daff4b3b8d27b5e12d0565b65ee60ac17e55c36d913462079f57"
         }
       },
       "redpill_lkm": {
