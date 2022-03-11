@@ -60,17 +60,16 @@ jobs:
           sed -i -e 's\0x0001\0x0002\g' -e 's\0x46f4\0x0002\g' ${{matrix.platform}}_user_config.json
 
           # 调整SN和MAC 最好使用 actions secrets 引入
-          sntext=`./redpill_tool_chain.sh sn ${{matrix.platform}}`
-          use_sn=`echo ${sntext} | grep 'Serial Number' | awk '{print $3}'`
-          use_mac=`echo ${sntext} | grep 'Mac Address' | awk '{print $3}' | sed 's\:\\g'`
-          echo ${sntext}
-          sed -i -e "s\1234XXX123\${use_sn}\g" -e 's\XXYYXXYYXXYY\0011323D47F7\g' ${{matrix.platform}}_user_config.json
+          use_sn=`./redpill_tool_chain.sh sn ${{matrix.platform}} | grep 'Serial Number' | awk '{print $3}'`
+          sed -i -e "s/1234XXX123/${use_sn}/g" -e 's/XXYYXXYYXXYY/0011323D47F7/g' ${{matrix.platform}}_user_config.json
 
           # 添加第二张网卡mac并设置网卡数量
           sed -i -e 's/0011323D47F7"/&,\n\t"mac2": "0011323D47F8",\n\t"netif_num": 2/' ${{matrix.platform}}_user_config.json
 
           # 调整synoinfo
           sed -i -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "2"\n    },/' ${{matrix.platform}}_user_config.json
+
+          cat ${{matrix.platform}}_user_config.json
 
       - name: 添加扩展驱动[非dva3221]
         if: matrix.platform != 'dva3221'
