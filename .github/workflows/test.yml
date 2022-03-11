@@ -108,7 +108,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: dsm-${{matrix.platform}}-${{matrix.version}}
-          path: images/redpill-(DVA|DS)[139]*_${{matrix.version}}_*.img
+          path: images/redpill-*.img
           if-no-files-found: error
 
       - name: 删除旧的工作流
