@@ -79,7 +79,7 @@ jobs:
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-virtio/rpext-index.json
 
       - name: 添加扩展驱动[dva3221]
-        if: matrix.platform = 'dva3221'
+        if: matrix.platform == 'dva3221'
         run: |
           # ./redpill_tool_chain.sh add https://github.com/pocopico/rp-ext/raw/main/redpill/rpext-index.json
           ./redpill_tool_chain.sh add https://github.com/pocopico/rp-ext/raw/main/redpill/rpext-index.json
