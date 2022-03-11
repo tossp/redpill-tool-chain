@@ -63,7 +63,7 @@ jobs:
           cp sample_user_config.json ${{matrix.platform}}_user_config.json
 
           # 调整VID和PID
-          sed -i -e 's\0x0001\0x0002\g' -e 's\0x46f4\0x0002\g' ${{matrix.platform}}_user_config.json
+          sed -i -e 's/0x0001/0x88AA/g' -e 's/0x46f4/0x88AA/g' ${{matrix.platform}}_user_config.json
 
           # 调整SN和MAC 最好使用 actions secrets 引入
           sn=`./redpill_tool_chain.sh sn ${{matrix.platform}} | grep 'Serial Number' | awk '{print $3}'`
@@ -86,9 +86,7 @@ jobs:
       - name: 添加扩展驱动[dva3221]
         if: matrix.platform == 'dva3221'
         run: |
-          echo '等待整理~😀'
-          # ./redpill_tool_chain.sh add https://github.com/dogodefi/redpill-ext/raw/master/acpid/rpext-index.json
-          # ./redpill_tool_chain.sh add https://github.com/dogodefi/redpill-ext/raw/master/virtio/rpext-index.json
+          echo '等待整理兼容性扩展~😀'
 
       - name: 添加 jumkey.misc
         if: endsWith(matrix.version,'42218') && matrix.platform != 'dva3221'
@@ -110,7 +108,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: dsm-${{matrix.platform}}-${{matrix.version}}
-          path: images/redpill-DS[139]*.img
+          path: images/redpill-(DVA|DS)[139]*_${{matrix.version}}_*.img
           if-no-files-found: error
 
       - name: 删除旧的工作流
