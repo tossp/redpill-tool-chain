@@ -77,7 +77,7 @@ jobs:
 
           cat ${{matrix.platform}}_user_config.json
 
-      - name: 添加扩展驱动[非dva3221]
+      - name: 添加扩展驱动
         if: matrix.platform != 'dva3221'
         run: |
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-acpid/rpext-index.json
@@ -86,9 +86,9 @@ jobs:
       - name: 添加扩展驱动[dva3221]
         if: matrix.platform == 'dva3221'
         run: |
-          # ./redpill_tool_chain.sh add https://github.com/pocopico/rp-ext/raw/main/redpill/rpext-index.json
-          ./redpill_tool_chain.sh add https://github.com/pocopico/rp-ext/raw/main/redpill/rpext-index.json
-          ./redpill_tool_chain.sh add https://github.com/orpheegt/redpill-load/raw/develop/redpill-virtio/rpext-index.json
+          echo '等待整理~😀'
+          # ./redpill_tool_chain.sh add https://github.com/dogodefi/redpill-ext/raw/master/acpid/rpext-index.json
+          # ./redpill_tool_chain.sh add https://github.com/dogodefi/redpill-ext/raw/master/virtio/rpext-index.json
 
       - name: 添加 jumkey.misc
         if: endsWith(matrix.version,'42218') && matrix.platform != 'dva3221'
