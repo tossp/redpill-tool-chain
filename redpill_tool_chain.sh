@@ -345,7 +345,7 @@ case "${ACTION}" in
             ;;
     clean)  clean
             ;;
-    sn)     ./serialnumbergen.sh `echo "${2}" | tr 'a-z' 'A-Z' | tr 'P' '+'`
+    sn)     ./serialnumbergen.sh `echo "${2}" | tr 'a-z' 'A-Z' | sed -e 's/P/+/' -e 's/XS/xs/'`
             ;;
     *)      if [ ! -z ${ACTION} ];then
                 echo "Error: action ${ACTION} does not exist"

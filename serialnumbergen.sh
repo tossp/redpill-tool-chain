@@ -24,7 +24,7 @@ function beginArray() {
     permanent="SBR"
     serialstart="2030 2040 20C0 2150"
     ;;
-  DS3622xsp)
+  DS3622xs+)
     permanent="SQR"
     serialstart="2030 2040 20C0 2150"
     ;;
@@ -95,7 +95,7 @@ function generateSerial(){
     DS920+)
       serialnum=$(toupper "`echo "$serialstart" |  tr ' ' '\n' | sort -R | tail -1`$permanent"$(generateRandomLetter)$(generateRandomValue)$(generateRandomValue)$(generateRandomValue)$(generateRandomValue)$(generateRandomLetter))
       ;;
-    DS3622xsp)
+    DS3622xs+)
       serialnum=$(toupper "`echo "$serialstart" |  tr ' ' '\n' | sort -R | tail -1`$permanent"$(generateRandomLetter)$(generateRandomValue)$(generateRandomValue)$(generateRandomValue)$(generateRandomValue)$(generateRandomLetter))
       ;;
     DVA3219)
@@ -117,7 +117,7 @@ $(basename ${0})
 Usage: ${0} <platform>
 Available platforms :
 ----------------------------------------------------------------------------------------
-DS3615xs DS3617xs DS916+ DS918+ DS920+ DS3622xsp FS6400 DVA3219 DVA3221
+DS3615xs DS3617xs DS916+ DS918+ DS920+ DS3622xs+ FS6400 DVA3219 DVA3221
 e.g. $(basename ${0}) DS3615xs
 ----------------------------------------------------------------------------------------
 EOF
@@ -127,13 +127,13 @@ EOF
 if [ -z "$1" ] ; then
   showhelp
 else
-  if [ "$1" = "DS3615xs" ] || [ "$1" = "DS3617xs" ] || [ "$1" = "DS916+" ] || [ "$1" = "DS918+" ] || [ "$1" = "DS920+" ] || [ "$1" = "DS3622xsp" ] || [ "$1" = "FS6400" ] || [ "$1" = "DVA3219" ] || [ "$1" = "DVA3221" ]; then
+  if [ "$1" = "DS3615xs" ] || [ "$1" = "DS3617xs" ] || [ "$1" = "DS916+" ] || [ "$1" = "DS918+" ] || [ "$1" = "DS920+" ] || [ "$1" = "DS3622xs+" ] || [ "$1" = "FS6400" ] || [ "$1" = "DVA3219" ] || [ "$1" = "DVA3221" ]; then
     echo -e "Model:\t\t\t$1"
     echo -e "Mac Address:\t\t$(generateMacAddress)"
     echo -e "Serial Number:\t\t$(generateSerial $1)"
   else
     echo "Error : $1 is not an available model for serial number generation. "
-    echo "Available Models : DS3615xs DS3617xs DS916+ DS918+ DS920+ DS3622xsp DVA3219 DVA3221"
+    echo "Available Models : DS3615xs DS3617xs DS916+ DS918+ DS920+ DS3622xs+ DVA3219 DVA3221"
     exit 1
   fi
 fi
