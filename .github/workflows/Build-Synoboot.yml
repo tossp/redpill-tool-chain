@@ -18,22 +18,22 @@ jobs:
       fail-fast: false
       matrix:
        include:
-       # DS36**
+       # 12盘位（可扩充至36盘）
          - platform: ds3615xs
            version: 7.0.1-42218
          - platform: ds3617xs
            version: 7.0.1-42218
          - platform: ds3622xsp
            version: 7.0.1-42218
-       # D9**
+       # 4盘位（可扩展至9盘）
          - platform: ds918p
            version: 7.0.1-42218
          - platform: ds920p
            version: 7.0.1-42218
-       # DS16**
+       # 6盘位（可扩充至16盘）
          - platform: ds1621p
            version: 7.0.1-42218
-       # DVA32**
+       # 4盘位（可扩充10个硬盘）
          - platform: dva3221
            version: 7.0.1-42218
 
