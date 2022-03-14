@@ -1,0 +1,120 @@
+name: Build 7.0.1-42218 (Extension with ACPID/vmxnet3/e1000e/e1000/tg3)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - 'docker/**'
+      - '**.sh'
+      - '**.json'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: 编译 "${{matrix.platform}} ${{matrix.version}}"
+    strategy:
+      fail-fast: false
+      matrix:
+       include:
+       # DS36**
+         - platform: ds3615xs
+           version: 7.0.1-42218
+         - platform: ds3617xs
+           version: 7.0.1-42218
+         - platform: ds3622xsp
+           version: 7.0.1-42218
+       # D9**
+         - platform: ds918p
+           version: 7.0.1-42218
+         - platform: ds920p
+           version: 7.0.1-42218
+       # DS16**
+         - platform: ds1621p
+           version: 7.0.1-42218
+       # DVA32**
+         - platform: dva3221
+           version: 7.0.1-42218
+
+    steps:
+      - name: 检出项目文件
+        uses: actions/checkout@v2
+
+      - name: 缓存加速
+        uses: actions/cache@v2
+        with:
+          path: |
+            cache/*.pat
+            docker/downloads/*.txz
+          key: ${{matrix.platform}}-${{matrix.version}}-${{ hashFiles('global_config.json') }}
+
+      - name: 准备构建环境
+        run: |
+          ./redpill_tool_chain.sh build ${{matrix.platform}}-${{matrix.version}}
+
+      - name: 配置引导镜像
+        run: |
+          cp sample_user_config.json ${{matrix.platform}}_user_config.json
+          # 调整VID和PID
+          sed -i -e 's\0x0001\0x0002\g' -e 's\0x46f4\0x0002\g' ${{matrix.platform}}_user_config.json
+          
+          # 调整SN和MAC（最好使用 actions secrets 引入）
+          sn=`./redpill_tool_chain.sh sn ${{matrix.platform}} | grep 'Serial Number' | awk '{print $3}'`
+          sed -i -e 's\1234XXX123\2030SQRE51KJK\g' -e 's\XXYYXXYYXXYY\00113202B21B\g' ${{matrix.platform}}_user_config.json
+          
+          # 添加第二张网卡mac并设置网卡数量
+          sed -i -e 's/00113202B21B"/&,\n\t"mac2": "00113202B21C",\n\t"netif_num": 6/' ${{matrix.platform}}_user_config.json
+          
+          # 调整synoinfo
+          sed -i -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "6"\n    },/' ${{matrix.platform}}_user_config.json
+          cat ${{matrix.platform}}_user_config.json
+          
+          # 添加扩展驱动: ACPID（开关机等功能响应）
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/jumkey/redpill-load/develop/redpill-acpid/rpext-index.json
+
+      - name: 添加网卡e1000/e1000e/tg3驱动
+        if: matrix.platform == 'ds3615xs' || matrix.platform == 'ds3617xs' || matrix.platform == 'ds3622xsp' || matrix.platform == 'ds918p'
+        run: |
+          # 添加驱动：vmxnet3/e1000/e1000e/tg3
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/vmxnet3/rpext-index.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/e1000e/rpext-index.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/e1000/rpext-index.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/tg3/rpext-index.json
+          
+      - name: DVA3221 添加扩展
+        if: matrix.platform != 'dva3221'
+        run: |
+          ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-acpid/rpext-index.json
+          ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-virtio/rpext-index.json
+          
+      - name: 添加 jumkey.misc
+        if: endsWith(matrix.version,'42218')
+        run: |
+          ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/rpext-index.json
+          
+      - name: 添加 jumkey.dtb
+        if: matrix.platform == 'ds920p' || matrix.platform == 'ds1621p'
+        run: |
+          ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-dtb/rpext-index.json
+          echo '!!!Create your own device tree binary!!!'
+          echo 'see https://github.com/jumkey/redpill-load/blob/develop/redpill-dtb/README.md'
+          
+      - name: 编译引导镜像
+        run: ./redpill_tool_chain.sh auto ${{matrix.platform}}-${{matrix.version}}
+
+
+      - name: 上传引导镜像到 github actions
+        uses: actions/upload-artifact@v2
+        with:
+          name: dsm-${{matrix.platform}}-${{matrix.version}}
+          path: images/redpill-DS[139]*.img
+          if-no-files-found: error
+
+      - name: 删除旧的工作流
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 3
+          keep_minimum_runs: 6
