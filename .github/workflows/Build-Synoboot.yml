@@ -61,7 +61,7 @@ jobs:
           
           # 调整SN和MAC（最好使用 actions secrets 引入）
           sn=`./redpill_tool_chain.sh sn ${{matrix.platform}} | grep 'Serial Number' | awk '{print $3}'`
-          sed -i -e 's\1234XXX123\2030SQRE51KJK\g' -e 's\XXYYXXYYXXYY\00113202B21B\g' ${{matrix.platform}}_user_config.json
+          sed -i -e "s/1234XXX123/${sn:="1130LWN123456"}/g" -e 's/XXYYXXYYXXYY/0011323D47F7/g' ${{matrix.platform}}_user_config.json
           
           # 添加第二张网卡mac并设置网卡数量
           sed -i -e 's/00113202B21B"/&,\n\t"mac2": "00113202B21C",\n\t"netif_num": 6/' ${{matrix.platform}}_user_config.json
@@ -82,14 +82,8 @@ jobs:
           ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/e1000/rpext-index.json
           ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/tg3/rpext-index.json
           
-      - name: DVA3221 添加扩展
-        if: matrix.platform != 'dva3221'
-        run: |
-          ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-acpid/rpext-index.json
-          ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-virtio/rpext-index.json
-          
       - name: 添加 jumkey.misc
-        if: endsWith(matrix.version,'42218')
+        if: endsWith(matrix.version,'42218') && matrix.platform != 'dva3221'
         run: |
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/rpext-index.json
           
@@ -97,12 +91,9 @@ jobs:
         if: matrix.platform == 'ds920p' || matrix.platform == 'ds1621p'
         run: |
           ./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-dtb/rpext-index.json
-          echo '!!!Create your own device tree binary!!!'
-          echo 'see https://github.com/jumkey/redpill-load/blob/develop/redpill-dtb/README.md'
           
       - name: 编译引导镜像
         run: ./redpill_tool_chain.sh auto ${{matrix.platform}}-${{matrix.version}}
-
 
       - name: 上传引导镜像到 github actions
         uses: actions/upload-artifact@v2
