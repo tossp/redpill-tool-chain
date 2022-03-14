@@ -70,8 +70,11 @@ jobs:
           sed -i -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "6"\n    },/' ${{matrix.platform}}_user_config.json
           cat ${{matrix.platform}}_user_config.json
           
-          # 添加扩展驱动: ACPID（开关机等功能响应）
-          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/jumkey/redpill-load/develop/redpill-acpid/rpext-index.json
+      - name: 添加扩展驱动 ACPID
+        if: matrix.platform != 'dva3221'
+        run: |
+            # 添加扩展驱动: ACPID（开关机等功能响应）
+            ./redpill_tool_chain.sh add https://raw.githubusercontent.com/jumkey/redpill-load/develop/redpill-acpid/rpext-index.json
 
       - name: 添加网卡e1000/e1000e/tg3驱动
         if: matrix.platform == 'ds3615xs' || matrix.platform == 'ds3617xs' || matrix.platform == 'ds3622xsp' || matrix.platform == 'ds918p'
