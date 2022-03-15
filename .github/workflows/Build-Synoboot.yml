@@ -63,8 +63,8 @@ jobs:
           sn=`./redpill_tool_chain.sh sn ${{matrix.platform}} | grep 'Serial Number' | awk '{print $3}'`
           sed -i -e "s/1234XXX123/${sn:="1130LWN123456"}/g" -e 's/XXYYXXYYXXYY/0011327B991A/g' ${{matrix.platform}}_user_config.json
           
-          # 添加第二张网卡mac并设置网卡数量
-          sed -i -e 's/0011327B991A"/&,\n\t"mac2": "0011327B991B",\n\t"mac3": "0011327B991C",\n\t"mac4": "0011327B991D",\n\t"mac5": "0011327B991E",\n\t"mac6": "0011327B991F",\n\t"netif_num": 8/' ${{matrix.platform}}_user_config.json
+          # 添加网卡mac并设置网卡数量
+          sed -i -e 's/0011327B991A"/&,\n\t"mac2": "0011327B991B",\n\t"mac3": "0011327B991C",\n\t"mac4": "0011327B991D",\n\t"mac5": "0011327B991E",\n\t"mac6": "0011327B991F",\n\t"mac6": "0011327B991F",\n\t"netif_num": 8/' ${{matrix.platform}}_user_config.json
           
           # 调整synoinfo
           sed -i -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "8"\n    },/' ${{matrix.platform}}_user_config.json
@@ -76,7 +76,7 @@ jobs:
             # 添加扩展驱动: ACPID（开关机等功能响应）
             ./redpill_tool_chain.sh add https://raw.githubusercontent.com/jumkey/redpill-load/develop/redpill-acpid/rpext-index.json
 
-      - name: 添加网卡e1000/e1000e/tg3驱动
+      - name: 添加网卡驱动
         if: matrix.platform == 'ds3615xs' || matrix.platform == 'ds3617xs' || matrix.platform == 'ds3622xsp' || matrix.platform == 'ds918p'
         run: |
           # 添加驱动：vmxnet3/e1000/e1000e/tg3
@@ -98,7 +98,7 @@ jobs:
       - name: 编译引导镜像
         run: ./redpill_tool_chain.sh auto ${{matrix.platform}}-${{matrix.version}}
 
-      - name: 上传引导镜像到 github actions
+      - name: 上传引导镜像
         uses: actions/upload-artifact@v2
         with:
           name: dsm-${{matrix.platform}}-${{matrix.version}}
