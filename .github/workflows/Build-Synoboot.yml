@@ -61,13 +61,13 @@ jobs:
           
           # 调整SN和MAC（最好使用 actions secrets 引入）
           sn=`./redpill_tool_chain.sh sn ${{matrix.platform}} | grep 'Serial Number' | awk '{print $3}'`
-          sed -i -e "s/1234XXX123/${sn:="1130LWN123456"}/g" -e 's/XXYYXXYYXXYY/0011323D47F7/g' ${{matrix.platform}}_user_config.json
+          sed -i -e "s/1234XXX123/${sn:="1130LWN123456"}/g" -e 's/XXYYXXYYXXYY/0011327B991A/g' ${{matrix.platform}}_user_config.json
           
           # 添加第二张网卡mac并设置网卡数量
-          sed -i -e 's/00113202B21B"/&,\n\t"mac2": "00113202B21C",\n\t"netif_num": 6/' ${{matrix.platform}}_user_config.json
+          sed -i -e 's/0011327B991A"/&,\n\t"mac2": "0011327B991B",\n\t"mac3": "0011327B991C",\n\t"mac4": "0011327B991D",\n\t"mac5": "0011327B991E",\n\t"mac6": "0011327B991F",\n\t"netif_num": 8/' ${{matrix.platform}}_user_config.json
           
           # 调整synoinfo
-          sed -i -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "6"\n    },/' ${{matrix.platform}}_user_config.json
+          sed -i -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "8"\n    },/' ${{matrix.platform}}_user_config.json
           cat ${{matrix.platform}}_user_config.json
           
       - name: 添加扩展驱动 ACPID
