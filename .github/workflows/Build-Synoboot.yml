@@ -64,7 +64,7 @@ jobs:
           sed -i -e "s/1234XXX123/${sn:="1130LWN123456"}/g" -e 's/XXYYXXYYXXYY/0011327B991A/g' ${{matrix.platform}}_user_config.json
           
           # 添加网卡mac并设置网卡数量
-          sed -i -e 's/0011327B991A"/&,\n\t"mac2": "0011327B991B",\n\t"mac3": "0011327B991C",\n\t"mac4": "0011327B991D",\n\t"mac5": "0011327B991E",\n\t"mac6": "0011327B991F",\n\t"mac6": "0011327B991F",\n\t"netif_num": 8/' ${{matrix.platform}}_user_config.json
+          sed -i -e 's/0011327B991A"/&,\n\t"mac2": "0011327B991B",\n\t"mac3": "0011327B991C",\n\t"mac4": "0011327B991D",\n\t"mac5": "0011327B991E",\n\t"mac6": "0011327B991F",\n\t"netif_num": 8/' ${{matrix.platform}}_user_config.json
           
           # 调整synoinfo
           sed -i -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "8"\n    },/' ${{matrix.platform}}_user_config.json
