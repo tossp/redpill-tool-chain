@@ -42,7 +42,7 @@ jobs:
           cp sample_user_config.json ${{matrix.platform}}_user_config.json
 
           # 调整SN和MAC 最好使用 actions secrets 引入
-          sed -i -e 's\1234XXX123\${{ secrets.DS918_SN }}\g' -e 's\XXYYXXYYXXYY\${{ secrets.DS918_MAC }}\g' ${{matrix.platform}}_user_config.jsonson
+          sed -i -e 's\1234XXX123\${{ secrets.DS918_SN }}\g' -e 's\XXYYXXYYXXYY\${{ secrets.DS918_MAC }}\g' ${{matrix.platform}}_user_config.json
 
           cat ${{matrix.platform}}_user_config.json
 
