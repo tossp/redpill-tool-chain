@@ -65,7 +65,7 @@ jobs:
           # 调整VID和PID
           sed -i -e 's/0x0001/0x88AA/g' -e 's/0x46f4/0x88AA/g' ${{matrix.platform}}_user_config.json
 
-          # 调整SN和MAC 最好使用 actions secrets 引入
+          # 调整SN和MAC,最好使用 actions secrets 引入,SN应该是固定值不应该每次生成
           sn=`./redpill_tool_chain.sh sn ${{matrix.platform}} | grep 'Serial Number' | awk '{print $3}'`
           sed -i -e "s/1234XXX123/${sn:="1130LWN123456"}/g" -e 's/XXYYXXYYXXYY/0011323D47F7/g' ${{matrix.platform}}_user_config.json
 
