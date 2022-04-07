@@ -44,8 +44,8 @@ jobs:
           # 调整SN和MAC 最好使用 actions secrets 引入
           sed -i -e 's\1234XXX123\${{ secrets.DS918_SN }}\g' -e 's\XXYYXXYYXXYY\${{ secrets.DS918_MAC }}\g' ${{matrix.platform}}_user_config.json
 
-          # 调整直通PCI的SATA映射
-          sed -i -e 's/${{ secrets.DS918_MAC }}"/&,\n\t"DiskIdxMap": "0006",\n\t"SataPortMap": "66"/' ${{matrix.platform}}_user_config.json
+          # 调整直通 PCI 的 SATA 顺序
+          sed -i -e 's/${{ secrets.DS918_MAC }}"/&,\n\t"DiskIdxMap": "0600"/' ${{matrix.platform}}_user_config.json
 
           cat ${{matrix.platform}}_user_config.json
 
