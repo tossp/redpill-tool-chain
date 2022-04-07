@@ -1,5 +1,7 @@
 # RedPill Tool Chain
 
+[![构建](https://github.com/tossp/redpill-tool-chain/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/tossp/redpill-tool-chain/actions/workflows/test.yml)
+
 [中文说明](README.md "English")
 THX @haydibe
 
@@ -56,7 +58,7 @@ Examples:
 ./redpill_tool_chain.sh
 Usage: ./redpill_tool_chain.sh <action> <platform version>
 
-Actions: build, auto, run, clean
+Actions: build, auto, run, clean, add, del, sn
 
 - build:    Build the toolchain image for the specified platform version.
 
@@ -75,20 +77,33 @@ Actions: build, auto, run, clean
 - del:      To remove an already installed extension you need to know its ID.
             eg: del 'example_dev.some_extension'
 
+- sn:       Generates a serial number and mac address for the following platforms
+            DS3615xs DS3617xs DS916+ DS918+ DS920+ DS3622xs+ FS6400 DVA3219 DVA3221 DS1621+
+            eg: sn ds920p
+
 Available platform versions:
 ---------------------
-bromolow-6.2.4-25556
-bromolow-7.0-41222
-bromolow-7.0.1-42218
-apollolake-6.2.4-25556
-apollolake-7.0-41890
-apollolake-7.0.1-42218
+ds3615xs-6.2.4-25556
+ds3615xs-7.0-41222
+ds3615xs-7.0.1-42218
+ds918p-6.2.4-25556
+ds918p-7.0-41890
+ds918p-7.0.1-42218
+ds3617xs-7.0.1-42218
+ds3622xsp-7.0.1-42218
+ds920p-7.0.1-42218
+ds1621p-7.0.1-42218
+dva3221-7.0.1-42218
 
 Custom Extensions:
 ---------------------
+jumkey.acpid2
 pocopico.mpt3sas
+pocopico.vmxnet3
 thethorgroup.boot-wait
 thethorgroup.virtio
+
+Check global_settings.json for settings.
 ```
 
 ### Custom extended driver management
@@ -102,22 +117,16 @@ thethorgroup.virtio
 
 ### Build toolchain image
 
-- For Bromolow 6.2.4   : `./redpill_tool_chain.sh build bromolow-6.2.4-25556`
-- For Bromolow 7.0     : `./redpill_tool_chain.sh build bromolow-7.0-41222`
-- For Apollolake 6.2.4 : `./redpill_tool_chain.sh build apollolake-6.2.4-25556`
-- For Apollolake 7.0   : `./redpill_tool_chain.sh build apollolake-7.0-41890`
+- For Bromolow 6.2.4   : `./redpill_tool_chain.sh build ds3615xs-6.2.4-25556`
+- For Apollolake 7.0   : `./redpill_tool_chain.sh build ds918p-7.0-41890`
 
 ### Create redpill bootloader image
 
-- For Bromolow 6.2.4   : `./redpill_tool_chain.sh auto bromolow-6.2.4-25556`
-- For Bromolow 7.0     : `./redpill_tool_chain.sh auto bromolow-7.0-41222`
-- For Apollolake 6.2.4 : `./redpill_tool_chain.sh auto apollolake-6.2.4-25556`
-- For Apollolake 7.0   : `./redpill_tool_chain.sh auto apollolake-7.0-41890`
+- For Bromolow 6.2.4   : `./redpill_tool_chain.sh auto ds3615xs-6.2.4-25556`
+- For Apollolake 7.0   : `./redpill_tool_chain.sh auto ds918p-7.0-41890`
 
 ### Clean old redpill bootloader images and build cache
 
-- For Bromolow 6.2.4   : `./redpill_tool_chain.sh clean bromolow-6.2.4-25556`
-- For Bromolow 7.0     : `./redpill_tool_chain.sh clean bromolow-7.0-41222`
-- For Apollolake 6.2.4 : `./redpill_tool_chain.sh clean apollolake-6.2.4-25556`
-- For Apollolake 7.0   : `./redpill_tool_chain.sh clean apollolake-7.0-41890`
+- For Bromolow 6.2.4   : `./redpill_tool_chain.sh clean ds3615xs-6.2.4-25556`
+- For Apollolake 7.0   : `./redpill_tool_chain.sh clean ds918p-7.0-41890`
 - For all              : `./redpill_tool_chain.sh clean all`

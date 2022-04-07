@@ -27,7 +27,7 @@ function getValueByJsonPath(){
 }
 
 function buildImage(){
-    local KERNEL_SRC_FILENAME=$( [ "${COMPILE_WITH}" == "kernel" ] && echo "${KERNEL_FILENAME}" || echo "${TOOLKIT_DEV_FILENAME}")
+    local KERNEL_SRC_FILENAME=$( [ "${COMPILE_WITH}" == "kernel" ] && echo "${TARGET_PLATFORM}.${KERNEL_FILENAME}" || echo "${TOOLKIT_DEV_FILENAME}")
     local KERNEL_SRC_FILENAME_SHA256=$( [ "${COMPILE_WITH}" == "kernel" ] && echo "${KERNEL_DOWNLOAD_SHA256}" || echo "${TOOLKIT_DEV_DOWNLOAD_SHA256}")
     checkFileSHA256Checksum "${DOWNLOAD_FOLDER}/${KERNEL_SRC_FILENAME}" "${KERNEL_SRC_FILENAME_SHA256}"
 
@@ -42,12 +42,13 @@ function buildImage(){
         --build-arg REDPILL_LKM_BRANCH="${REDPILL_LKM_BRANCH}" \
         --build-arg REDPILL_LOAD_REPO="${REDPILL_LOAD_REPO}" \
         --build-arg REDPILL_LOAD_BRANCH="${REDPILL_LOAD_BRANCH}" \
+        --build-arg TARGET_NAME="${TARGET_NAME}" \
         --build-arg TARGET_PLATFORM="${TARGET_PLATFORM}" \
         --build-arg TARGET_VERSION="${TARGET_VERSION}" \
         --build-arg DSM_VERSION="${DSM_VERSION}" \
         --build-arg TARGET_REVISION="${TARGET_REVISION}" \
         --build-arg REDPILL_LKM_MAKE_TARGET=${REDPILL_LKM_MAKE_TARGET} \
-        --tag ${DOCKER_IMAGE_NAME}:${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} ./docker
+        --tag ${DOCKER_IMAGE_NAME}:${ID} ./docker
 }
 
 function clean(){
@@ -59,8 +60,8 @@ function clean(){
         OLD_IMAGES=$(docker image ls --filter label=redpill-tool-chain --quiet $( [ "${CLEAN_IMAGES}" == "orphaned" ] && echo "--filter dangling=true"))
         docker builder prune --all --filter label=redpill-tool-chain --force
     else
-        OLD_IMAGES=$(docker image ls --filter label=redpill-tool-chain=${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} --quiet --filter dangling=true)
-        docker builder prune --filter label=redpill-tool-chain=${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} --force
+        OLD_IMAGES=$(docker image ls --filter label=redpill-tool-chain=${ID} --quiet --filter dangling=true)
+        docker builder prune --filter label=redpill-tool-chain=${ID} --force
     fi
     if [ ! -z "${OLD_IMAGES}" ]; then
         docker image rm ${OLD_IMAGES}
@@ -75,6 +76,7 @@ function runContainer(){
     local CMD=${1}
     if [ ! -e $(realpath "${USER_CONFIG_JSON}") ]; then
         echo "user config does not exist: ${USER_CONFIG_JSON}"
+        echo "run 'cp sample_user_config.json ${USER_CONFIG_JSON}' and edit '${USER_CONFIG_JSON}'."
         exit 1
     fi
     if [[ "${LOCAL_RP_LKM_USE}" == "true" && ! -e $(realpath "${LOCAL_RP_LKM_PATH}") ]]; then
@@ -109,12 +111,13 @@ function runContainer(){
         --volume ${REDPILL_LOAD_IMAGES}:/opt/redpill-load/images \
         --env REDPILL_LKM_MAKE_TARGET=${REDPILL_LKM_MAKE_TARGET} \
         --env TARGET_PLATFORM="${TARGET_PLATFORM}" \
+        --env TARGET_NAME="${TARGET_NAME}" \
         --env TARGET_VERSION="${TARGET_VERSION}" \
         --env DSM_VERSION="${DSM_VERSION}" \
         --env REVISION="${TARGET_REVISION}" \
         --env LOCAL_RP_LKM_USE="${LOCAL_RP_LKM_USE}" \
         --env LOCAL_RP_LOAD_USE="${LOCAL_RP_LOAD_USE}" \
-        ${DOCKER_IMAGE_NAME}:${TARGET_PLATFORM}-${TARGET_VERSION}-${TARGET_REVISION} $( [ "${CMD}" == "run" ] && echo "/bin/bash")
+        ${DOCKER_IMAGE_NAME}:${ID} $( [ "${CMD}" == "run" ] && echo "/bin/bash")
 }
 
 function __ext_add(){
@@ -166,7 +169,7 @@ function downloadFromUrlIfNotExists(){
     local OUT_FILE="${2}"
     local MSG="${3}"
     if [ ! -e ${OUT_FILE} ]; then
-        echo "Downloading ${MSG}"
+        echo "Downloading ${MSG} '${OUT_FILE}'"
         curl -k --progress-bar --location ${DOWNLOAD_URL} --output ${OUT_FILE}
     fi
 }
@@ -188,7 +191,7 @@ function showHelp(){
 cat << EOF
 Usage: ${0} <action> <platform version>
 
-Actions: build, auto, run, clean
+Actions: build, auto, run, clean, add, del, sn
 
 - build:    Build the toolchain image for the specified platform version.
 
@@ -206,6 +209,10 @@ Actions: build, auto, run, clean
 
 - del:      To remove an already installed extension you need to know its ID.
             eg: del 'example_dev.some_extension'
+
+- sn:       Generates a serial number and mac address for the following platforms
+            DS3615xs DS3617xs DS916+ DS918+ DS920+ DS3622xs+ FS6400 DVA3219 DVA3221 DS1621+
+            eg: sn ds920p
 
 Available platform versions:
 ---------------------
@@ -269,7 +276,7 @@ fi
 ACTION=${1}
 ID=${2}
 
-if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ID}" != "all" ]]; then
+if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ACTION}" != "sn" && "${ID}" != "all" ]]; then
     BUILD_CONFIG=$(getValueByJsonPath ".build_configs[] | select(.id==\"${ID}\")" "${CONFIG}")
     if [ -z "${BUILD_CONFIG}" ];then
         echo "Error: Platform version ${ID} not specified in global_config.json"
@@ -288,6 +295,7 @@ if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ID}" != "all" ]]; then
     TARGET_VERSION=$(getValueByJsonPath ".platform_version | split(\"-\")[1]" "${BUILD_CONFIG}")
     DSM_VERSION=$(getValueByJsonPath ".platform_version | split(\"-\")[1][0:3]" "${BUILD_CONFIG}")
     TARGET_REVISION=$(getValueByJsonPath ".platform_version | split(\"-\")[2]" "${BUILD_CONFIG}")
+    TARGET_NAME=$(getValueByJsonPath ".platform_name" "${BUILD_CONFIG}")
     USER_CONFIG_JSON=$(getValueByJsonPath ".user_config_json" "${BUILD_CONFIG}")
     DOCKER_BASE_IMAGE=$(getValueByJsonPath ".docker_base_image" "${BUILD_CONFIG}")
     COMPILE_WITH=$(getValueByJsonPath ".compile_with" "${BUILD_CONFIG}")
@@ -303,12 +311,12 @@ if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ID}" != "all" ]]; then
     REDPILL_LOAD_REPO=$(getValueByJsonPath ".redpill_load.source_url" "${BUILD_CONFIG}")
     REDPILL_LOAD_BRANCH=$(getValueByJsonPath ".redpill_load.branch" "${BUILD_CONFIG}")
 
-    EXTRACTED_KSRC='/linux*'
+    EXTRACTED_KSRC="/linux*"
     if [ "${COMPILE_WITH}" == "toolkit_dev" ]; then
         EXTRACTED_KSRC="/usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${DSM_VERSION}/build/"
     fi
 else
-    if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ACTION}" != "clean" ]]; then
+    if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ACTION}" != "sn" && "${ACTION}" != "clean" ]]; then
         echo "All is not supported for action \"${ACTION}\""
         exit 1
     fi
@@ -322,7 +330,7 @@ case "${ACTION}" in
             exit 1
             ;;
     build)  if [ "${COMPILE_WITH}" == "kernel" ];then
-                downloadFromUrlIfNotExists "${KERNEL_DOWNLOAD_URL}" "${DOWNLOAD_FOLDER}/${KERNEL_FILENAME}" "Kernel"
+                downloadFromUrlIfNotExists "${KERNEL_DOWNLOAD_URL}" "${DOWNLOAD_FOLDER}/${TARGET_PLATFORM}.${KERNEL_FILENAME}" "Kernel"
             else
                 downloadFromUrlIfNotExists "${TOOLKIT_DEV_DOWNLOAD_URL}" "${DOWNLOAD_FOLDER}/${TOOLKIT_DEV_FILENAME}" "Toolkit Dev"
             fi
@@ -336,6 +344,8 @@ case "${ACTION}" in
     auto)   runContainer "auto"
             ;;
     clean)  clean
+            ;;
+    sn)     ./serialnumbergen.sh `echo "${2}" | tr 'a-z' 'A-Z' | sed -e 's/P/+/' -e 's/XS/xs/'`
             ;;
     *)      if [ ! -z ${ACTION} ];then
                 echo "Error: action ${ACTION} does not exist"
