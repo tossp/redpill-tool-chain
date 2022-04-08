@@ -25,6 +25,8 @@ jobs:
            version: 7.0.1-42218
          - platform: ds3622xsp
            version: 7.0.1-42218
+         - platform: ds3622xsp
+           version: 7.1-42621
        # 4盘位（可扩展至9盘）
          - platform: ds918p
            version: 7.0.1-42218
