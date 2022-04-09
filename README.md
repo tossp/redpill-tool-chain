@@ -15,6 +15,7 @@
 - 为`DS3617xs`提供DSM7适配支持 ( 感谢 [@jimmyGALLAND](https://github.com/jimmyGALLAND) )
 - 为`DVA3221`提供DSM7适配支持 ( 感谢 [@dogodefi](https://github.com/dogodefi) )
 - 整理社区扩展驱动 ( 感谢 [@pocopico](https://github.com/pocopico) )
+- 部分引导提取自 [@tinycore-redpill](https://github.com/pocopico/tinycore-redpill) 项目
 - `redpill_lkm_make_target`字段的可选值有 `dev-v6`, `dev-v7`, `test-v6`, `test-v7`, `prod-v6` 或者 `prod-v7`，
   需要注意后缀为`-v6`的值用于 DSM6 版本构建， 需要注意后缀为`-v7`的值用于 DSM7 版本构建. 默认使用的是 `dev-v6` 和 `dev-v7`。
 
