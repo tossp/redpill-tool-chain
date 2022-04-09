@@ -109,6 +109,7 @@ function runContainer(){
         $( [ -e "${USER_CONFIG_JSON}" ] && echo "--volume $(realpath ${USER_CONFIG_JSON}):/opt/redpill-load/user_config.json") \
         --volume ${REDPILL_LOAD_CACHE}:/opt/redpill-load/cache \
         --volume ${REDPILL_LOAD_IMAGES}:/opt/redpill-load/images \
+        # --volume $(realpath docker/helper.sh):/opt/helper.sh \
         --env REDPILL_LKM_MAKE_TARGET=${REDPILL_LKM_MAKE_TARGET} \
         --env TARGET_PLATFORM="${TARGET_PLATFORM}" \
         --env TARGET_NAME="${TARGET_NAME}" \
