@@ -96,10 +96,7 @@ function runContainer(){
                 echo "Host path does not exist: ${HOST_PATH}"
                 exit 1
             fi
-            mkdir -p "${HOST_PATH}-${TARGET_PLATFORM}"
-            rm -rf "${HOST_PATH}-${TARGET_PLATFORM}"
-            cp -r "${HOST_PATH}" "${HOST_PATH}-${TARGET_PLATFORM}"
-            BINDS+="--volume $(realpath ${HOST_PATH}-${TARGET_PLATFORM}):${CONTAINER_PATH} "
+            BINDS+="--volume $(realpath ${HOST_PATH}):${CONTAINER_PATH} "
         done
     fi
     docker run --privileged --rm  $( [ "${CMD}" == "run" ] && echo " --interactive") --tty \
