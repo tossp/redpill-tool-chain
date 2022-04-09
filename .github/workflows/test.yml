@@ -90,7 +90,6 @@ jobs:
         if: matrix.platform == 'dva3221'
         run: |
           echo '等待整理兼容性扩展~😀'
-          ./redpill_tool_chain.sh add https://github.com/pocopico/redpill-load/raw/develop/redpill-boot-wait/rpext-index.json
 
       - name: 添加 Misc shell
         run: |

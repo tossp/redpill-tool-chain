@@ -183,6 +183,7 @@
     },
     {
       "id": "ds918p-7.1.0-42661",
+      "platform_name": "DS918+",
       "platform_version": "apollolake-7.1.0-42661",
       "user_config_json": "ds918p_user_config.json",
       "docker_base_image": "debian:10-slim",
