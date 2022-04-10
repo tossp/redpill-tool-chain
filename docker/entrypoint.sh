@@ -33,7 +33,6 @@ if [ $# -eq 0 ];then
     fi
 
     echo "Lay back and enjoy the show: Magic is about to happen!"
-    ./helper.sh "${TARGET_NAME}" "${TARGET_VERSION}-${TARGET_REVISION}"
     make build_all
     echo "The redpill bootloader is created, the container will be ended now."
     exit 0
