@@ -166,7 +166,7 @@ brp_repack_tar()
   pr_process "Repacking %s file form %s" "${2}" "${1}"
 
   local output;
-  output=$("${TAR_PATH}" -czf "${2}" -C "${1}" ./ 2>&1)
+  output=$(tar -czf "${2}" -C "${1}" . 2>&1)
   if [ $? -ne 0 ]; then
     pr_process_err
 
@@ -204,13 +204,13 @@ make_extract(){
   pr_process "Use syno_extract_system_patch extract PAT"
   LD_LIBRARY_PATH=/usr/local/lib ${extract_bin} "${BRP_PAT_FILE}" /tmp/pat && pr_process_ok || pr_process_err
 
-  pr_process "New checksum of PAT %s - Patch the PAT checksum" ${BRP_PAT_FILE}
-  brp_repack_tar "/tmp/pat" /tmp/repack.tar.gz
-  mv ${BRP_PAT_FILE} ${BRP_PAT_FILE}.org && mv /tmp/repack.tar.gz ${BRP_PAT_FILE} && rm -rf "/tmp/pat"
+  brp_repack_tar "/tmp/pat/" /tmp/repack.tar.gz
 
+  pr_process "New checksum of PAT %s - Patch the PAT checksum" ${BRP_PAT_FILE}
+  mv ${BRP_PAT_FILE} ${BRP_PAT_FILE}.org && mv /tmp/repack.tar.gz ${BRP_PAT_FILE} && rm -rf "/tmp/pat"
   sum=`sha256sum ${BRP_PAT_FILE} | awk '{print $1}'`
   old_sum="$(brp_json_get_field "${BRP_REL_CONFIG_JSON}" "os.sha256")"
-  # sed -i "s/${old_sum}/${sum}/" "${BRP_REL_CONFIG_JSON}"
+  sed -i "s/${old_sum}/${sum}/" "${BRP_REL_CONFIG_JSON}"
 
   pr_process_ok
 }
