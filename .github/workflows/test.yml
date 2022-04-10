@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       clean_cache:
-        description: 'Test scenario tags'
+        description: 'Clear caches'
         required: false
         type: boolean
   push:
