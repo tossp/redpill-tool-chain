@@ -105,7 +105,7 @@
       "platform_name": "DS3615xs",
       "platform_version": "bromolow-7.1.0-42661",
       "user_config_json": "ds3615xs_user_config.json",
-      "docker_base_image": "debian:8-slim",
+      "docker_base_image": "debian:10-slim",
       "compile_with": "toolkit_dev",
       "redpill_lkm_make_target": "dev-v7",
       "downloads": {
@@ -267,7 +267,7 @@
       "platform_name": "DS3617xs",
       "platform_version": "broadwell-7.1.0-42661",
       "user_config_json": "ds3617xs_user_config.json",
-      "docker_base_image": "debian:8-slim",
+      "docker_base_image": "debian:10-slim",
       "redpill_lkm_make_target": "dev-v7",
       "compile_with": "toolkit_dev",
       "downloads": {
@@ -428,7 +428,7 @@
       "id": "ds1621p-7.1.0-42661",
       "platform_name": "DS1621+",
       "platform_version": "v1000-7.1.0-42661",
-      "user_config_json": "ds1621p_user_config-test.json",
+      "user_config_json": "ds1621p_user_config.json",
       "docker_base_image": "debian:10-slim",
       "compile_with": "toolkit_dev",
       "redpill_lkm_make_target": "dev-v7",
