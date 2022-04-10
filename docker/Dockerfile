@@ -67,9 +67,7 @@ WORKDIR "/opt"
 COPY Makefile /opt/
 
 COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
 COPY helper.sh ./
-RUN chmod +x ./helper.sh
+RUN chmod +x /entrypoint.sh  && chmod +x ./helper.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]

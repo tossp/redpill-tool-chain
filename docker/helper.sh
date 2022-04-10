@@ -158,42 +158,61 @@ pr_dbg "*******************************************"
 
 ########################################################## 读取环境参数完成
 
-# BRP_DEBUG=1 ./helper.sh "DS918+" "7.1.0-42661"
+# Repacks tar-like file
+#
+# Args: $1 directory to unpack (must exist) | $2 file path | $3 should hard fail on error? [default=1]
+brp_repack_tar()
+{
+  pr_process "Unpacking %s file to %s" "${1}" "${2}"
 
-readonly EXTRACT_PAT_FILE="${BRP_CACHE_DIR}/extract.tar.gz"
+  local output;
+  output=$("${TAR_PATH}" -czf "${1}" -C "${2}" 2>&1)
+  if [ $? -ne 0 ]; then
+    pr_process_err
+
+    if [[ "${3:-1}" -ne 1 ]]; then
+      pr_err "Failed to unpack tar\n\n%s" "${output}"
+      return 1
+    else
+      pr_crit "Failed to unpack tar\n\n%s" "${output}"
+    fi
+  fi
+
+  pr_process_ok
+}
+
+readonly extract_bin='/usr/local/bin/syno_extract_system_patch'
 make_extract(){
   archive="$1"
-  if [ ! -f "${EXTRACT_PAT_FILE}" ]; then
-    readonly EXTRACT_PAT_URL='https://global.download.synology.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat'
-    pr_info "PAT file %s not found - downloading from %s" "${EXTRACT_PAT_FILE}" "${EXTRACT_PAT_URL}"
-    "${CURL_PATH}" --output "${EXTRACT_PAT_FILE}" "${EXTRACT_PAT_URL}"
+  if [ ! -f "${extract_bin}" ]; then
+    pr_dbg "%s not found - preparing" "${extract_bin}"
+    if [ ! -f "${EXTRACT_PAT_FILE}" ]; then
+      rpt_download_remote "${EXTRACT_PAT_URL}" "${EXTRACT_PAT_FILE}"
+    else
+      pr_dbg "Found existing PAT at %s - skipping download" "${EXTRACT_PAT_FILE}"
+    fi
+    pr_dbg "Found syno_extract_system_patch File not found - preparing" "${extract_bin}"
+    brp_mkdir /tmp/synoesp && brp_unpack_tar "${EXTRACT_PAT_FILE}" "/tmp/synoesp"
+    brp_mkdir /tmp/extract && brp_unpack_zrd "/tmp/synoesp/rd.gz" "/tmp/extract"
+    cp /tmp/extract/usr/lib/{libcurl.so.4,libmbedcrypto.so.5,libmbedtls.so.13,libmbedx509.so.1,libmsgpackc.so.2,libsodium.so,libsynocodesign-ng-virtual-junior-wins.so.7} /usr/local/lib
+    cp /tmp/extract/usr/syno/bin/scemd ${extract_bin}
+    rm -rf /tmp/synoesp /tmp/extract
   else
-    pr_dbg "Found existing PAT at %s - skipping download" "${EXTRACT_PAT_FILE}"
+    pr_dbg "Found syno_extract_system_patch File at %s - skipping nake" "${extract_bin}"
   fi
-  mkdir synoesp
-  tar -C./synoesp/ -xf "${EXTRACT_PAT_FILE}" rd.gz
-  cd synoesp
-  xz -dc < rd.gz >rd 2>/dev/null && echo "extract rd.gz" || echo error
-  cpio -idm <rd 2>&1 && echo "extract rd" || echo error
-  mkdir extract && cd extract
-  cp ../usr/lib/libcurl.so.4 ../usr/lib/libmbedcrypto.so.5 ../usr/lib/libmbedtls.so.13 ../usr/lib/libmbedx509.so.1 ../usr/lib/libmsgpackc.so.2 ../usr/lib/libsodium.so ../usr/lib/libsynocodesign-ng-virtual-junior-wins.so.7  /usr/local/lib
-  cp ../usr/syno/bin/scemd /usr/local/bin/syno_extract_system_patch
-  cd ../..
-  mkdir pat
-  LD_LIBRARY_PATH=/usr/local/lib /usr/local/bin/syno_extract_system_patch "${BRP_PAT_FILE}" pat || pr_info "extract latest pat"
-  cd pat
+
+  LD_LIBRARY_PATH=/usr/local/lib ${extract_bin} "${BRP_PAT_FILE}" /tmp/pat && pr_info "extract latest pat"
+
   pr_process "Repacked PAT %s" ${BRP_PAT_FILE}
   pr_empty_nl
-  "${TAR_PATH}" -czf archive.tar.gz ./
-  mv ${BRP_PAT_FILE} ${BRP_PAT_FILE}.org
-  mv archive.tar.gz ${BRP_PAT_FILE}
-  cd ../
-  rm -rf pat synoesp
-  sum=`sha256sum ${BRP_PAT_FILE} | awk '{print $1}'`
-  pr_info "The new checksum -  %s" "${sum}"
+  brp_repack_tar "/tmp/pat" /tmp/repack.tar.gz
+  mv ${BRP_PAT_FILE} ${BRP_PAT_FILE}.org && mv /tmp/repack.tar.gz ${BRP_PAT_FILE} && rm -rf "/tmp/pat"
 
+  sum=`sha256sum ${BRP_PAT_FILE} | awk '{print $1}'`
   old_sum="$(brp_json_get_field "${BRP_REL_CONFIG_JSON}" "os.sha256")"
-  sed -i "s/${old_sum}/${sum}/" "${BRP_REL_CONFIG_JSON}"
+  # sed -i "s/${old_sum}/${sum}/" "${BRP_REL_CONFIG_JSON}"
+  pr_info "New checksum of PAT %s - Patch the PAT checksum" "${sum}"
+
   pr_process_ok
 }
 
@@ -225,16 +244,29 @@ check_pat() {
 }
 
 ##########################################################
+# fix redo
 readonly BRP_PAT_FILE="${BRP_CACHE_DIR}/${BRP_REL_OS_ID}.pat"
+
+if [ -f "${BRP_PAT_FILE}.org" ] && [ -f "${BRP_PAT_FILE}" ]; then
+  pr_info "Found patched PAT file - Patch the PAT checksum"
+  file_sum="$(brp_json_get_field "${BRP_REL_CONFIG_JSON}" "os.sha256")"
+  new_sum=`sha256sum "${BRP_PAT_FILE}" | awk '{print $1}'`
+  org_sum=`sha256sum "${BRP_PAT_FILE}.org" | awk '{print $1}'`
+  if [ "$new_sum" != "$file_sum" ]  && [ "$org_sum" == "$file_sum" ]; then
+    sed -i "s/${org_sum}/${new_sum}/" "${BRP_REL_CONFIG_JSON}"
+  fi
+fi
+
+readonly EXTRACT_PAT_FILE="${BRP_CACHE_DIR}/extract.tar.gz"
+readonly EXTRACT_PAT_URL='https://global.download.synology.com/download/DSM/release/7.0.1/42218/DSM_DS3615xs_42218.pat'
+
 if [ ! -d "${BRP_UPAT_DIR}" ]; then
   pr_dbg "Unpacked PAT %s not found - preparing" "${BRP_UPAT_DIR}"
 
   brp_mkdir "${BRP_UPAT_DIR}"
 
   if [ ! -f "${BRP_PAT_FILE}" ]; then
-    readonly BRP_PAT_URL=$(brp_json_get_field "${BRP_REL_CONFIG_JSON}" "os.pat_url")
-    pr_info "PAT file %s not found - downloading from %s" "${BRP_PAT_FILE}" "${BRP_PAT_URL}"
-    "${CURL_PATH}" --output "${BRP_PAT_FILE}" "${BRP_PAT_URL}"
+    rpt_download_remote "$(brp_json_get_field "${BRP_REL_CONFIG_JSON}" "os.pat_url")" "${BRP_PAT_FILE}"
   else
     pr_dbg "Found existing PAT at %s - skipping download" "${BRP_PAT_FILE}"
   fi
@@ -251,7 +283,6 @@ if [ ! -d "${BRP_UPAT_DIR}" ]; then
 else
   pr_info "Found unpacked PAT at \"%s\" - skipping unpacking" "${BRP_UPAT_DIR}"
 fi
-
 
 if [ "${BRP_KEEP_BUILD}" -eq 0 ]; then
   "${RM_PATH}" -rf "${BRP_BUILD_DIR}"
