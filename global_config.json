@@ -426,6 +426,7 @@
     },
     {
       "id": "dva3221-7.1.0-42661",
+      "platform_name": "DVA3221",
       "platform_version": "denverton-7.1.0-42661",
       "user_config_json": "dva3221_user_config.json",
       "docker_base_image": "debian:10-slim",

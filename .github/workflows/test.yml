@@ -63,12 +63,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: 缓存加速
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             cache/*.pat
             docker/downloads/*.txz
           key: ${{matrix.platform}}-${{matrix.version}}-${{ hashFiles('global_config.json') }}
+          restore-keys: ${{matrix.platform}}-${{matrix.version}}-
 
       - name: 准备构建环境
         run: |

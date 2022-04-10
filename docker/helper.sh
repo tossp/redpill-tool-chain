@@ -166,7 +166,7 @@ brp_repack_tar()
   pr_process "Repacking %s file form %s" "${2}" "${1}"
 
   local output;
-  output=$(tar -czf "${2}" -C "${1}" . 2>&1)
+  output=$("${TAR_PATH}" -czf "${2}" -C "${1}" . 2>&1)
   if [ $? -ne 0 ]; then
     pr_process_err
 
