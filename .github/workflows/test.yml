@@ -2,6 +2,11 @@ name: 构建
 
 on:
   workflow_dispatch:
+    inputs:
+      clean_cache:
+        description: 'Test scenario tags'
+        required: false
+        type: boolean
   push:
     branches:
       - master
@@ -60,16 +65,24 @@ jobs:
 
     steps:
       - name: 检出项目文件
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: 缓存加速
         uses: actions/cache@v3
         with:
           path: |
             cache/*.pat
+            cache/*.org
             docker/downloads/*.txz
           key: ${{matrix.platform}}-${{matrix.version}}-${{ hashFiles('global_config.json') }}
           restore-keys: ${{matrix.platform}}-${{matrix.version}}-
+
+      - name: 清理缓存
+        if: "${{ github.event.inputs.clean_cache == 'true' }}"
+        run: |
+          rm -rf cache/*.pat
+          rm -rf cache/*.org
+          rm -rf docker/downloads/*.txz
 
       - name: 准备构建环境
         run: |
@@ -123,7 +136,7 @@ jobs:
           ./redpill_tool_chain.sh auto ${{matrix.platform}}-${{matrix.version}}
 
       - name: 上传引导镜像到 github actions
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: dsm-${{matrix.platform}}-${{matrix.version}}
           path: images/redpill-*.img
@@ -132,7 +145,5 @@ jobs:
       - name: 删除旧的工作流
         uses: Mattraks/delete-workflow-runs@v2
         with:
-          token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          retain_days: 3
-          keep_minimum_runs: 6
+          retain_days: 1
+          keep_minimum_runs: 3
