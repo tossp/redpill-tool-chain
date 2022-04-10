@@ -1,0 +1,43 @@
+{
+  "id": "redpill-misc",
+  "url": "https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-misc.json",
+  "info": {
+    "name": "Misc shell",
+    "description": "Misc shell",
+    "author_url": "https://github.com/pocopico/redpill-load/raw/develop/redpill-misc",
+    "packer_url": "https://github.com/pocopico/redpill-load/raw/develop/redpill-misc",
+    "help_url": "https://github.com/pocopico/redpill-load/raw/develop/redpill-misc"
+  },
+  "releases": {
+    "ds3615xs_25556": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds3615xs_41222": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds3615xs_42218": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds3615xs_42550": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds3615xs_42621": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds3615xs_42661": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds3617xs_42218": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds3617xs_42550": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds3617xs_42621": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds3617xs_42661": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds3622xsp_42218": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds3622xsp_42621": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds3622xsp_42661": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds1621p_42218": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds1621p_42621": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds1621p_42661": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "dva3221_42218": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "dva3221_42621": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "dva3221_42661": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds918p_25556": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds918p_41890": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds918p_42218": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds918p_42550": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds918p_42621": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds918p_42661": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds920p_42621": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds920p_42550": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds920p_42661": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds920p_42218": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json",
+    "ds2422p_42218": "https://github.com/jumkey/redpill-load/raw/develop/redpill-misc/recipes/universal.json"
+  }
+}
