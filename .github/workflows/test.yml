@@ -23,8 +23,8 @@ jobs:
             version: 6.2.4-25556
           - platform: ds3615xs
             version: 7.0.1-42218
-          - platform: ds3615xs
-            version: 7.1.0-42661
+          # - platform: ds3615xs
+          #   version: 7.1.0-42661
 
           - platform: ds918p
             version: 6.2.4-25556
@@ -35,8 +35,8 @@ jobs:
 
           - platform: ds3617xs
             version: 7.0.1-42218
-          - platform: ds3617xs
-            version: 7.1.0-42661
+          # - platform: ds3617xs
+          #   version: 7.1.0-42661
 
           - platform: ds3622xsp
             version: 7.0.1-42218
@@ -55,8 +55,6 @@ jobs:
 
           - platform: dva3221
             version: 7.0.1-42218
-          - platform: dva3221
-            version: 7.1.0-42661
 
     steps:
       - name: 检出项目文件
@@ -113,7 +111,7 @@ jobs:
       - name: 添加 jumkey.dtb !!!Create your own device tree binary!!!
         if: matrix.platform == 'ds920p' || matrix.platform == 'ds1621p' || matrix.platform == 'ds2422p'
         run: |
-          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/test/extensions/redpill-dtb.json
+          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-dtb.json
           echo '!!!Create your own device tree binary!!!'
           echo 'see https://github.com/jumkey/redpill-load/blob/develop/redpill-dtb/README.md'
 

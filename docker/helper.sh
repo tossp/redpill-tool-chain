@@ -11,8 +11,7 @@ fi
 
 cd "${BASH_SOURCE%/*}/" || exit 1
 ########################################################################################################################
-echo "${BASH_SOURCE%/*}/"
-echo "$PWD"
+
 ##### CONFIGURATION YOU CAN OVERRIDE USING ENVIRONMENT #################################################################
 BRP_JUN_MOD=${BRP_JUN_MOD:-0} # whether you want to use jun's mod
 BRP_DEBUG=${BRP_DEBUG:-0} # whether you want to see debug messages
