@@ -58,7 +58,7 @@ Examples:
 ./redpill_tool_chain.sh
 Usage: ./redpill_tool_chain.sh <action> <platform version>
 
-Actions: build, auto, run, clean, add, del, sn
+Actions: build, auto, run, clean, add, del, sn, pat
 
 - build:    Build the toolchain image for the specified platform version.
 
@@ -81,25 +81,30 @@ Actions: build, auto, run, clean, add, del, sn
             DS3615xs DS3617xs DS916+ DS918+ DS920+ DS3622xs+ FS6400 DVA3219 DVA3221 DS1621+
             eg: sn ds920p
 
+- pat:      For decoding PAT file. see: https://github.com/tossp/redpill-tool-chain/blob/master/.github/workflows/pat.yml
+
 Available platform versions:
 ---------------------
-ds3615xs-6.2.4-25556
-ds3615xs-7.0-41222
-ds3615xs-7.0.1-42218
-ds918p-6.2.4-25556
-ds918p-7.0-41890
-ds918p-7.0.1-42218
-ds3617xs-7.0.1-42218
-ds3622xsp-7.0.1-42218
-ds920p-7.0.1-42218
 ds1621p-7.0.1-42218
+ds1621p-7.1.0-42661
+ds3615xs-6.2.4-25556
+ds3615xs-7.0.1-42218
+ds3615xs-7.1.0-42661
+ds3617xs-7.0.1-42218
+ds3617xs-7.1.0-42661
+ds3622xsp-7.0.1-42218
+ds3622xsp-7.1.0-42661
+ds918p-6.2.4-25556
+ds918p-7.0.1-42218
+ds918p-7.1.0-42661
+ds920p-7.0.1-42218
+ds920p-7.1.0-42661
 dva3221-7.0.1-42218
+dva3221-7.1.0-42661
 
 Custom Extensions:
 ---------------------
 jumkey.acpid2
-pocopico.mpt3sas
-pocopico.vmxnet3
 thethorgroup.boot-wait
 thethorgroup.virtio
 
