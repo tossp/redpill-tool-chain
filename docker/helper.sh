@@ -2,7 +2,7 @@
 
 set -u
 
-if [ ${TARGET_REVISION} -lt 42218 ];then
+if [ ${TARGET_REVISION} -lt 42661 ];then
   exit 0
 fi
 

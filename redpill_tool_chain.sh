@@ -117,7 +117,7 @@ function runContainer(){
         --env REVISION="${TARGET_REVISION}" \
         --env LOCAL_RP_LKM_USE="${LOCAL_RP_LKM_USE}" \
         --env LOCAL_RP_LOAD_USE="${LOCAL_RP_LOAD_USE}" \
-        ${DOCKER_IMAGE_NAME}:${ID} $( [ "${CMD}" == "run" ] && echo "/bin/bash")
+        ${DOCKER_IMAGE_NAME}:${ID} $( [ "${CMD}" == "run" ] && echo "/bin/bash") $( [ "${CMD}" == "pat" ] && echo "/opt/helper.sh")
 }
 
 function __ext_add(){
@@ -344,6 +344,8 @@ case "${ACTION}" in
             fi
             ;;
     run)    runContainer "run"
+            ;;
+    pat)    runContainer "pat"
             ;;
     auto)   runContainer "auto"
             ;;
