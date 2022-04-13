@@ -1,7 +1,6 @@
 # RedPill Tool Chain
 
 [![构建](https://github.com/tossp/redpill-tool-chain/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/tossp/redpill-tool-chain/actions/workflows/test.yml)
-[![构建DSM7.1](https://github.com/tossp/redpill-tool-chain/actions/workflows/pat.yaml/badge.svg?branch=master)](https://github.com/tossp/redpill-tool-chain/actions/workflows/pat.yaml)
 
 这是一个测试项目，可能会有不可预测的事情发生（比如：毁损数据、烧毁硬件等等），请**谨慎使用**。
 

@@ -132,7 +132,7 @@ jobs:
           echo 'see https://github.com/jumkey/redpill-load/blob/develop/redpill-dtb/README.md'
 
       - name: 预处理PAT
-        if: matrix.version == '7.1.0-42661' && matrix.platform == 'ds3615xs' || matrix.platform == 'ds3617xs'
+        if: endsWith(matrix.version, '42661') && startsWith(matrix.platform, 'ds361')
         run: |
           sed -i 's/debian:8-slim/debian:10-slim/g' global_config.json
           ./redpill_tool_chain.sh build ${{matrix.platform}}-${{matrix.version}}
