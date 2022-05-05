@@ -2,6 +2,11 @@ name: 构建
 
 on:
   workflow_dispatch:
+    inputs:
+      clean_cache:
+        description: 'Clear caches'
+        required: false
+        type: boolean
   push:
     branches:
       - master
@@ -19,21 +24,28 @@ jobs:
       matrix:
         include:
           - platform: ds918p
-            version: 7.0.1-42218
-          - platform: ds918p
             version: 7.1.0-42661
 
     steps:
       - name: 检出项目文件
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      # - name: 缓存加速
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: |
-      #       cache/*.pat
-      #       docker/downloads/*.txz
-      #     key: ${{matrix.platform}}-${{matrix.version}}-${{ hashFiles('global_config.json') }}
+      - name: 缓存加速
+        uses: actions/cache@v3
+        with:
+          path: |
+            cache/*.pat
+            cache/*.org
+            docker/downloads/*.txz
+          key: ${{matrix.platform}}-${{matrix.version}}-${{ hashFiles('global_config.json') }}
+          restore-keys: ${{matrix.platform}}-${{matrix.version}}-
+
+      - name: 清理缓存
+        if: "${{ github.event.inputs.clean_cache == 'true' }}"
+        run: |
+          rm -rf cache/*.pat
+          rm -rf cache/*.org
+          rm -rf docker/downloads/*.txz
 
       - name: 准备构建环境
         run: |
@@ -58,6 +70,8 @@ jobs:
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-acpid.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-virtio.json
 
+          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/pocopico-r8125.json
+
       - name: 添加扩展驱动[dva3221]
         if: matrix.platform == 'dva3221'
         run: |
@@ -75,12 +89,21 @@ jobs:
           echo '!!!Create your own device tree binary!!!'
           echo 'see https://github.com/jumkey/redpill-load/blob/develop/redpill-dtb/README.md'
 
+      - name: 预处理PAT
+        if: endsWith(matrix.version, '42661') && startsWith(matrix.platform, 'ds361')
+        run: |
+          sed -i 's/debian:8-slim/debian:10-slim/g' global_config.json
+          ./redpill_tool_chain.sh build ${{matrix.platform}}-${{matrix.version}}
+          ./redpill_tool_chain.sh pat ${{matrix.platform}}-${{matrix.version}}
+          sed -i 's/debian:10-slim/debian:8-slim/g' global_config.json
+          ./redpill_tool_chain.sh build ${{matrix.platform}}-${{matrix.version}}
+
       - name: 编译引导镜像
         run: |
           ./redpill_tool_chain.sh auto ${{matrix.platform}}-${{matrix.version}}
 
       - name: 上传引导镜像到 github actions
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: dsm-${{matrix.platform}}-${{matrix.version}}
           path: images/redpill-*.img
@@ -89,7 +112,5 @@ jobs:
       - name: 删除旧的工作流
         uses: Mattraks/delete-workflow-runs@v2
         with:
-          token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          retain_days: 3
-          keep_minimum_runs: 6
+          retain_days: 1
+          keep_minimum_runs: 3

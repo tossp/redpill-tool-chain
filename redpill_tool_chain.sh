@@ -117,7 +117,7 @@ function runContainer(){
         --env REVISION="${TARGET_REVISION}" \
         --env LOCAL_RP_LKM_USE="${LOCAL_RP_LKM_USE}" \
         --env LOCAL_RP_LOAD_USE="${LOCAL_RP_LOAD_USE}" \
-        ${DOCKER_IMAGE_NAME}:${ID} $( [ "${CMD}" == "run" ] && echo "/bin/bash")
+        ${DOCKER_IMAGE_NAME}:${ID} $( [ "${CMD}" == "run" ] && echo "/bin/bash") $( [ "${CMD}" == "pat" ] && echo "/opt/helper.sh")
 }
 
 function __ext_add(){
@@ -191,7 +191,7 @@ function showHelp(){
 cat << EOF
 Usage: ${0} <action> <platform version>
 
-Actions: build, auto, run, clean, add, del, sn
+Actions: build, auto, run, clean, add, del, sn, pat
 
 - build:    Build the toolchain image for the specified platform version.
 
@@ -213,6 +213,8 @@ Actions: build, auto, run, clean, add, del, sn
 - sn:       Generates a serial number and mac address for the following platforms
             DS3615xs DS3617xs DS916+ DS918+ DS920+ DS3622xs+ FS6400 DVA3219 DVA3221 DS1621+
             eg: sn ds920p
+
+- pat:      For decoding PAT file. see: https://github.com/tossp/redpill-tool-chain/blob/master/.github/workflows/pat.yml
 
 Available platform versions:
 ---------------------
@@ -344,6 +346,8 @@ case "${ACTION}" in
             fi
             ;;
     run)    runContainer "run"
+            ;;
+    pat)    runContainer "pat"
             ;;
     auto)   runContainer "auto"
             ;;
