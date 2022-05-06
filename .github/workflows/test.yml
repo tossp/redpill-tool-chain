@@ -1,4 +1,4 @@
-name: 构建33229
+name: 构建
 
 on:
   workflow_dispatch:
@@ -24,6 +24,8 @@ jobs:
       matrix:
         include:
           #  两行一组，删除不需要的版本
+          - platform: dva3221
+            version: 7.0.1-42218
           - platform: dva3221
             version: 7.1.0-42661
 
@@ -61,7 +63,7 @@ jobs:
 
           # 调整SN和MAC,最好使用 actions secrets 引入,SN应该是固定值不应该每次生成
           sn=`./redpill_tool_chain.sh sn ${{matrix.platform}} | grep 'Serial Number' | awk '{print $3}'`
-          sed -i -e "s/1234XXX123/${sn:="1130LWN123456"}/g" -e 's/XXYYXXYYXXYY/A62044756F39/g' ${{matrix.platform}}_user_config.json
+          sed -i -e "s/1234XXX123/${sn:="1130LWN123456"}/g" -e 's/XXYYXXYYXXYY/0011323D47F7/g' ${{matrix.platform}}_user_config.json
 
           # 添加第二张网卡mac并设置网卡数量
           sed -i -e 's/0011323D47F7"/&,\n\t"mac2": "0011323D47F8",\n\t"netif_num": 2/' ${{matrix.platform}}_user_config.json
@@ -72,13 +74,20 @@ jobs:
           cat ${{matrix.platform}}_user_config.json
 
       - name: 添加扩展驱动
+        if: matrix.platform != 'dva3221'
         run: |
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-acpid.json
-          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-virtio.json
-          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/vmxnet3/releases/dva3221_42218.json
+          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-virtio.json ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/vmxnet3/releases/dva3221_42218.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/e1000e/releases/dva3221_42218.json
           ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/e1000/releases/dva3221_42218.json
-         
+
+      - name: 添加扩展驱动[dva3221]
+        if: matrix.platform == 'dva3221'
+        run: |
+          echo '等待整理兼容性扩展~😀'
+          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json
+
       - name: 添加 Misc shell
         run: |
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-misc.json
