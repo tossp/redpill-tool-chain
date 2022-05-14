@@ -74,9 +74,9 @@
       }
     },
     {
-      "id": "ds2422p-7.1.0-42661",
+      "id": "ds2422p-7.0.1-42218",
       "platform_name": "DS2422+",
-      "platform_version": "v1000-7.1.0-42661",
+      "platform_version": "v1000-7.0.1-42218",
       "user_config_json": "ds2422p_user_config.json",
       "docker_base_image": "debian:10-slim",
       "compile_with": "toolkit_dev",
@@ -84,7 +84,7 @@
       "downloads": {
         "kernel": {
           "url": "https://sourceforge.net/projects/dsgpl/files/Synology%20NAS%20GPL%20Source/25426branch/v1000-source/linux-4.4.x.txz/download",
-          "sha256": "d3e85eb80f16a83244fcae6016ab6783cd8ac55e3af2b4240455261396e1e1be"
+          "sha256": "ac532ebb221d9c55f78236d57288ac31d410dde01f1453f60b0c502333fdf107"
         },
         "toolkit_dev": {
           "url": "https://sourceforge.net/projects/dsgpl/files/toolkit/DSM7.0/ds.v1000-7.0.dev.txz/download",
