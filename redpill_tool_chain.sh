@@ -99,6 +99,7 @@ function runContainer(){
             BINDS+="--volume $(realpath ${HOST_PATH}):${CONTAINER_PATH} "
         done
     fi
+    BINDS+="--volume $(realpath docker/helper.sh):/opt/helper.sh "
     docker run --privileged --rm  $( [ "${CMD}" == "run" ] && echo " --interactive") --tty \
         --name redpill-tool-chain \
         --hostname redpill-tool-chain \

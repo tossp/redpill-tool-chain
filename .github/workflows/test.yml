@@ -29,6 +29,9 @@ jobs:
           - platform: ds1621p
             version: 7.1.0-42661
 
+          - platform: ds2422p
+            version: 7.0.1-42218
+
           - platform: ds3615xs
             version: 6.2.4-25556
           - platform: ds3615xs
