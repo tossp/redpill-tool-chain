@@ -118,6 +118,8 @@ function runContainer(){
         --env REVISION="${TARGET_REVISION}" \
         --env LOCAL_RP_LKM_USE="${LOCAL_RP_LKM_USE}" \
         --env LOCAL_RP_LOAD_USE="${LOCAL_RP_LOAD_USE}" \
+        $( [ "${BUILD_LOADER_JUN_MOD}" == "1" ] && echo "--env BRP_JUN_MOD=1") \
+        $( [ "${BUILD_LOADER_DEBUG}" == "1" ] && echo "--env BRP_DEBUG=1") \
         ${DOCKER_IMAGE_NAME}:${ID} $( [ "${CMD}" == "run" ] && echo "/bin/bash") $( [ "${CMD}" == "pat" ] && echo "/opt/helper.sh")
 }
 
@@ -313,6 +315,9 @@ if [[ "${ACTION}" != "del" && "${ACTION}" != "add" && "${ACTION}" != "sn" && "${
     REDPILL_LKM_BRANCH=$(getValueByJsonPath ".redpill_lkm.branch" "${BUILD_CONFIG}")
     REDPILL_LOAD_REPO=$(getValueByJsonPath ".redpill_load.source_url" "${BUILD_CONFIG}")
     REDPILL_LOAD_BRANCH=$(getValueByJsonPath ".redpill_load.branch" "${BUILD_CONFIG}")
+
+    BUILD_LOADER_JUN_MOD=$(getValueByJsonPath ".build_env.jun_mod" "${BUILD_CONFIG}")
+    BUILD_LOADER_DEBUG=$(getValueByJsonPath ".build_env.debug" "${BUILD_CONFIG}")
 
     EXTRACTED_KSRC="/linux*"
     if [ "${COMPILE_WITH}" == "toolkit_dev" ]; then
