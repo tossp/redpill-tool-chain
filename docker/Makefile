@@ -34,7 +34,7 @@ build_redpill_load:
 	@read -a KVERS <<< "$$(modinfo --field=vermagic redpill-lkm/redpill.ko)" && \
 	cp -f $(REDPILL_LKM_SRC)/redpill.ko $(REDPILL_LOAD_SRC)/ext/rp-lkm/redpill-linux-v$${KVERS[0]}.ko
 	./helper.sh
-	@if [ "$(TARGET_NAME)" == "DS1621+" ]; then \
+	@if [ "$(TARGET_NAME)" == "DS1621+" || "$(TARGET_NAME)" == "DS920+" || "$(TARGET_NAME)" == "DS3622xs+" ]; then \
 		pushd $(REDPILL_LOAD_SRC) &&  BRP_JUN_MOD=1 ./build-loader.sh '$(TARGET_NAME)' '$(TARGET_VERSION)-$(TARGET_REVISION)'; \
 	else \
 		pushd $(REDPILL_LOAD_SRC) && ./build-loader.sh '$(TARGET_NAME)' '$(TARGET_VERSION)-$(TARGET_REVISION)'; \
