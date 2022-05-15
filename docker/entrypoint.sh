@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
+BRP_DEBUG=${BRP_DEBUG:-0}
 if [ "${BRP_DEBUG}" -eq 1 ]; then
   env
 fi
