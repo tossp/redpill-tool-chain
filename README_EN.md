@@ -50,6 +50,17 @@ Note3: Please do not ask to add <platform_version> with configurations for other
 
 Feel free to modify any values in `global_config.json` that suite your needs!
 
+---
+⚠️⚠️⚠️
+Due to the complex environment of each version, the packaging strategy will change in detail. For details, please refer to the [workflow configuration file](https://github.com/tossp/redpill-tool-chain/blob/master/.github/workflows/test.yml)
+
+View the execution results in [Gtihub Actions](https://github.com/tossp/redpill-tool-chain/actions) and download the generated image.
+
+❗❗❗
+All extensions introduced in the [workflow configuration file](https://github.com/tossp/redpill-tool-chain/blob/master/.github/workflows/test.yml) are recommended and required
+
+---
+
 Examples:
 
 ### See Help text
@@ -81,12 +92,13 @@ Actions: build, auto, run, clean, add, del, sn, pat
             DS3615xs DS3617xs DS916+ DS918+ DS920+ DS3622xs+ FS6400 DVA3219 DVA3221 DS1621+
             eg: sn ds920p
 
-- pat:      For decoding PAT file. see: https://github.com/tossp/redpill-tool-chain/blob/master/.github/workflows/pat.yml
+- pat:      For decoding PAT file. 
 
 Available platform versions:
 ---------------------
 ds1621p-7.0.1-42218
 ds1621p-7.1.0-42661
+ds2422p-7.0.1-42218
 ds3615xs-6.2.4-25556
 ds3615xs-7.0.1-42218
 ds3615xs-7.1.0-42661

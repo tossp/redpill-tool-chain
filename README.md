@@ -44,6 +44,17 @@
 
 依赖: `docker`
 
+---
+⚠️⚠️⚠️
+由于各版本环境不完全一致，制作策略会有细节变化，具体可以参考 [工作流配置文件](https://github.com/tossp/redpill-tool-chain/blob/master/.github/workflows/test.yml)
+
+在 [Gtihub Actions](https://github.com/tossp/redpill-tool-chain/actions) 中查看执行结果，并下载生成的镜像
+
+❗❗❗
+[工作流配置文件](https://github.com/tossp/redpill-tool-chain/blob/master/.github/workflows/test.yml) 中引入的扩展都是推荐必装扩展
+
+---
+
 ## 快捷说明
 
 - `docker/Dockerfile` 中补入了阿里云镜像
@@ -113,7 +124,7 @@ Actions: build, auto, run, clean, add, del, sn, pat
             DS3615xs DS3617xs DS916+ DS918+ DS920+ DS3622xs+ FS6400 DVA3219 DVA3221 DS1621+
             eg: sn ds920p
 
-- pat:      For decoding PAT file. see: https://github.com/tossp/redpill-tool-chain/blob/master/.github/workflows/pat.yml
+- pat:      For decoding PAT file.
 
 Available platform versions:
 ---------------------
