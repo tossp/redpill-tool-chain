@@ -108,6 +108,8 @@ function runContainer(){
         $( [ "${LOCAL_RP_LOAD_USE}" == "true" ] && echo "--volume $(realpath ${LOCAL_RP_LOAD_PATH}):/opt/redpill-load") \
         $( [ "${LOCAL_RP_LKM_USE}" == "true" ] && echo "--volume $(realpath ${LOCAL_RP_LKM_PATH}):/opt/redpill-lkm") \
         $( [ -e "${USER_CONFIG_JSON}" ] && echo "--volume $(realpath ${USER_CONFIG_JSON}):/opt/redpill-load/user_config.json") \
+        $( [ "${BUILD_LOADER_JUN_MOD}" == "1" ] && echo "--env BRP_JUN_MOD=1") \
+        $( [ "${BUILD_LOADER_DEBUG}" == "1" ] && echo "--env BRP_DEBUG=1") \
         --volume ${REDPILL_LOAD_CACHE}:/opt/redpill-load/cache \
         --volume ${REDPILL_LOAD_IMAGES}:/opt/redpill-load/images \
         --env REDPILL_LKM_MAKE_TARGET=${REDPILL_LKM_MAKE_TARGET} \
@@ -118,8 +120,6 @@ function runContainer(){
         --env REVISION="${TARGET_REVISION}" \
         --env LOCAL_RP_LKM_USE="${LOCAL_RP_LKM_USE}" \
         --env LOCAL_RP_LOAD_USE="${LOCAL_RP_LOAD_USE}" \
-        $( [ "${BUILD_LOADER_JUN_MOD}" == "1" ] && echo "--env BRP_JUN_MOD=1") \
-        $( [ "${BUILD_LOADER_DEBUG}" == "1" ] && echo "--env BRP_DEBUG=1") \
         ${DOCKER_IMAGE_NAME}:${ID} $( [ "${CMD}" == "run" ] && echo "/bin/bash") $( [ "${CMD}" == "pat" ] && echo "/opt/helper.sh")
 }
 
