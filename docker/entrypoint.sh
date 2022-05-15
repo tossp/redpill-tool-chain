@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -eu
 
+if [ "${BRP_DEBUG}" -eq 1 ]; then
+  env
+fi
+
 if [ $# -eq 0 ];then
     git -C ${REDPILL_LKM_SRC} fetch
     git -C ${REDPILL_LOAD_SRC} fetch
@@ -33,7 +37,6 @@ if [ $# -eq 0 ];then
     fi
 
     echo "Lay back and enjoy the show: Magic is about to happen!"
-    env
     make build_all
     echo "The redpill bootloader is created, the container will be ended now."
     exit 0
