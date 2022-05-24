@@ -1,6 +1,6 @@
 {
   "id": "redpill-dtb",
-  "url": "https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-dtb.json",
+  "url": "https://github.com/jyugtz163/redpill-tool-chain/raw/master/extensions/redpill-dtb.json",
   "info": {
     "name": "Device tree binary",
     "description": "Create your own device tree binary",
@@ -17,7 +17,7 @@
     "ds1621p_42621": "https://github.com/pocopico/redpill-load/raw/develop/redpill-dtb/recipes/universal.json",
     "ds1621p_42661": "https://github.com/pocopico/redpill-load/raw/develop/redpill-dtb/recipes/universal.json",
     "ds2422p_42218": "https://github.com/pocopico/redpill-load/raw/develop/redpill-dtb/recipes/universal.json",
-    "ds2422p_42621": "https://github.com/pocopico/redpill-load/raw/develop/redpill-dtb/recipes/universal.json",
-    "ds2422p_42661": "https://github.com/pocopico/redpill-load/raw/develop/redpill-dtb/recipes/universal.json"
+    "ds2422p_42621": "https://github.com/jumkey/redpill-load/raw/develop/redpill-dtb/recipes/universal.json",
+    "ds2422p_42661": "https://github.com/jumkey/redpill-load/raw/develop/redpill-dtb/recipes/universal.json"
   }
 }
