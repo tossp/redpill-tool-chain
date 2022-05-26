@@ -24,48 +24,11 @@ jobs:
       matrix:
         include:
           #  两行一组，删除不需要的版本
-          - platform: ds1621p
-            version: 7.0.1-42218
-          - platform: ds1621p
-            version: 7.1.0-42661
-
-          - platform: ds2422p
-            version: 7.0.1-42218
-
-          - platform: ds3615xs
-            version: 6.2.4-25556
-          - platform: ds3615xs
-            version: 7.0.1-42218
-          - platform: ds3615xs
-            version: 7.1.0-42661
-
-          - platform: ds3617xs
-            version: 7.0.1-42218
+         
           - platform: ds3617xs
             version: 7.1.0-42661
 
-          - platform: ds3622xsp
-            version: 7.0.1-42218
-          - platform: ds3622xsp
-            version: 7.1.0-42661
-
-          - platform: ds918p
-            version: 6.2.4-25556
-          - platform: ds918p
-            version: 7.0.1-42218
-          - platform: ds918p
-            version: 7.1.0-42661
-
-          - platform: ds920p
-            version: 7.0.1-42218
-          - platform: ds920p
-            version: 7.1.0-42661
-
-          - platform: dva3221
-            version: 7.0.1-42218
-          - platform: dva3221
-            version: 7.1.0-42661
-
+   
     steps:
       - name: 检出项目文件
         uses: actions/checkout@v3
@@ -120,6 +83,8 @@ jobs:
       - name: 添加扩展驱动[dva3221]
         if: matrix.platform == 'dva3221'
         run: |
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/tg3/releases/ds3617xs_42218.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/ixgbe.vanilla/rpext-index.json
           echo '等待整理兼容性扩展~😀'
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json
 
