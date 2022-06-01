@@ -1,4 +1,4 @@
-name: 0531 DS3617
+name: 0601 DS3617
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name:  0531 DS3617 "${{matrix.platform}} ${{matrix.version}}"
+    name:  构建 "${{matrix.platform}} ${{matrix.version}}"
     strategy:
       fail-fast: false
       matrix:
@@ -69,7 +69,7 @@ jobs:
           
 
           # 调整synoinfo
-          sed -i -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "2"\n    },/' ${{matrix.platform}}_user_config.json
+          sed -i -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "1"\n    },/' ${{matrix.platform}}_user_config.json
 
           cat ${{matrix.platform}}_user_config.json
 
@@ -80,18 +80,17 @@ jobs:
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-acpid.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-virtio.json
           ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/igb/rpext-index.json
-          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/r8101/rpext-index.json
           ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/r8168/rpext-index.json
           ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/vmxnet3/rpext-index.json
       - name: 添加扩展驱动[dva3221]
         if: matrix.platform == 'dva3221'
         run: |
           echo '等待整理兼容性扩展~😀'
-          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json
+          ./redpill_tool_chain.sh add https://github.com/wincol1151/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json
 
       - name: 添加 Misc shell
         run: |
-          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-misc.json
+          ./redpill_tool_chain.sh add https://github.com/wincol1151/redpill-tool-chain/raw/master/extensions/redpill-misc.json
 
       - name: 添加 jumkey.dtb !!!Create your own device tree binary!!!
         if: matrix.platform == 'ds920p' || matrix.platform == 'ds1621p' || matrix.platform == 'ds2422p'
