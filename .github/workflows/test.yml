@@ -83,7 +83,9 @@ jobs:
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-acpid.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-virtio.json
-
+          ./redpill_tool_chain.sh add https://github.com/pocopico/rp-ext/blob/main/e1000e/rpext-index.json
+          ./redpill_tool_chain.sh add https://github.com/pocopico/rp-ext/blob/main/e1000/rpext-index.json
+          
       - name: 添加扩展驱动[dva3221]
         if: matrix.platform == 'dva3221'
         run: |
