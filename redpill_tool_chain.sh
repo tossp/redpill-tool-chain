@@ -13,6 +13,7 @@ function checkPreconditon(){
         echo "required tool(s) missing:$missing_tools. Please install them and run the command again!"
         exit 1
     fi
+    asdf
 }
 checkPreconditon
 
