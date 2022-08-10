@@ -158,8 +158,12 @@
         "branch": "master"
       },
       "redpill_load": {
-        "source_url": "https://github.com/tossp/redpill-load.git",
+        "source_url": "https://github.com/jumkey/redpill-load.git",
         "branch": "42218-20211021"
+      },
+      "build_env": {
+      "jun_mod": 1,
+      "debug": 0
       }
     },
     {
