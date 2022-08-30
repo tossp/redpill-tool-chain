@@ -58,7 +58,7 @@ jobs:
 
       - name: 配置引导镜像
         run: |
-          cp user_config.json ${{matrix.platform}}_user_config.json
+          mv user_config.json ${{matrix.platform}}_user_config.json
           #cp sample_user_config.json ${{matrix.platform}}_user_config.json
 
           # 调整VID和PID
