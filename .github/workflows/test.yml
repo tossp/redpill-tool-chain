@@ -24,31 +24,6 @@ jobs:
       matrix:
         include:
           #  两行一组，删除不需要的版本
-          - platform: ds1621p
-            version: 7.0.1-42218
-          - platform: ds1621p
-            version: 7.1.0-42661
-
-          - platform: ds2422p
-            version: 7.0.1-42218
-
-          - platform: ds3615xs
-            version: 6.2.4-25556
-          - platform: ds3615xs
-            version: 7.0.1-42218
-          - platform: ds3615xs
-            version: 7.1.0-42661
-
-          - platform: ds3617xs
-            version: 7.0.1-42218
-          - platform: ds3617xs
-            version: 7.1.0-42661
-
-          - platform: ds3622xsp
-            version: 7.0.1-42218
-          - platform: ds3622xsp
-            version: 7.1.0-42661
-
           - platform: ds918p
             version: 6.2.4-25556
           - platform: ds918p
@@ -116,6 +91,12 @@ jobs:
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-acpid.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-virtio.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/r8168/releases/ds918p_25556.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/r8168/releases/ds918p_42218.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/r8152/releases/ds918p_42218.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/r8152/releases/ds918p_25556.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/rtl8150/releases/ds918p_42218.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/rtl8150/releases/ds918p_25556.json
 
       - name: 添加扩展驱动[dva3221]
         if: matrix.platform == 'dva3221'
