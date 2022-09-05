@@ -3,7 +3,10 @@
         "pid": "0x0001",
         "vid": "0x46f4",
         "sn": "1234XXX123",
-        "mac1": "XXYYXXYYXXYY"
+        "mac1": "XXYYXXYYXXYY",
+        "DiskIdxMap":"00",
+        "SataPortMap":"4",
+        "SasIdxMap":"0"
     },
     "synoinfo": {},
     "ramdisk_copy": {},
