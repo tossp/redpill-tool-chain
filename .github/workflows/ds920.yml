@@ -1,4 +1,4 @@
-name: 构建
+name: 构建DS920+
 
 on:
   workflow_dispatch:
