@@ -112,6 +112,7 @@ jobs:
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-e1000e.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-r8168.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-vmxnet3.json
+          
       - name: 添加扩展驱动[dva3221]
         if: matrix.platform == 'dva3221'
         run: |
@@ -149,17 +150,3 @@ jobs:
         with:
           retain_days: 1
           keep_minimum_runs: 3
-Footer
-© 2022 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
