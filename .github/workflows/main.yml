@@ -135,8 +135,7 @@ jobs:
           ./redpill_tool_chain.sh add https://raw.https://raw.githubusercontent.com/pocopico/rp-ext/master/ixgbe/rpext-index.json
           ./redpill_tool_chain.sh add https://raw.https://raw.githubusercontent.com/pocopico/rp-ext/master/mpt2sas/rpext-index.json
           ./redpill_tool_chain.sh add https://raw.https://raw.githubusercontent.com/pocopico/rp-ext/master/r8125/rpext-index.json
-          ./redpill_tool_chain.sh add https://raw.https://raw.githubusercontent.com/pocopico/rp-ext/master/r8169/rpext-index.json
-      - name: 添加扩展驱动[dva3221]
+       - name: 添加扩展驱动[dva3221]
         if: matrix.platform == 'dva3221'
         run: |
           echo '等待整理兼容性扩展~😀'
