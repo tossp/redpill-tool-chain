@@ -1,0 +1,147 @@
+name: 构建
+
+on:
+  workflow_dispatch:
+    inputs:
+      clean_cache:
+        description: 'Clear caches'
+        required: false
+        type: boolean
+  push:
+    branches:
+      - master
+    paths:
+      - "docker/**"
+      - "**.sh"
+      - "**.json"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: 编译 "${{matrix.platform}} ${{matrix.version}}"
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          #  两行一组，删除不需要的版本
+          - platform: ds1621p
+            version: 7.0.1-42218
+          - platform: ds1621p
+            version: 7.1.0-42661
+
+          - platform: ds2422p
+            version: 7.0.1-42218
+
+          - platform: ds3615xs
+            version: 6.2.4-25556
+          - platform: ds3615xs
+            version: 7.0.1-42218
+          - platform: ds3615xs
+            version: 7.1.0-42661
+
+          - platform: ds3617xs
+            version: 7.0.1-42218
+          - platform: ds3617xs
+            version: 7.1.0-42661
+
+          - platform: ds3622xsp
+            version: 7.0.1-42218
+          - platform: ds3622xsp
+            version: 7.1.0-42661
+
+          - platform: ds918p
+            version: 6.2.4-25556
+          - platform: ds918p
+            version: 7.0.1-42218
+          - platform: ds918p
+            version: 7.1.0-42661
+
+          - platform: ds920p
+            version: 7.0.1-42218
+          - platform: ds920p
+            version: 7.1.0-42661
+
+          - platform: dva3221
+            version: 7.0.1-42218
+          - platform: dva3221
+            version: 7.1.0-42661
+
+    steps:
+      - name: 检出项目文件
+        uses: actions/checkout@v3
+
+      - name: 缓存加速
+        uses: actions/cache@v3
+        with:
+          path: |
+            cache/*.pat
+            cache/*.org
+            docker/downloads/*.txz
+          key: ${{matrix.platform}}-${{matrix.version}}-${{ hashFiles('global_config.json') }}
+          restore-keys: ${{matrix.platform}}-${{matrix.version}}-
+
+      - name: 清理缓存
+        if: "${{ github.event.inputs.clean_cache == 'true' }}"
+        run: |
+          rm -rf cache/*.pat
+          rm -rf cache/*.org
+          rm -rf docker/downloads/*.txz
+      - name: 准备构建环境
+        run: |
+          ./redpill_tool_chain.sh build ${{matrix.platform}}-${{matrix.version}}
+      - name: 配置引导镜像
+        run: |
+          cp sample_user_config.json ${{matrix.platform}}_user_config.json
+          # 调整VID和PID
+          sed -i -e 's/0x0001/0x88AA/g' -e 's/0x46f4/0x88AA/g' ${{matrix.platform}}_user_config.json
+          # 调整SN和MAC,最好使用 actions secrets 引入,SN应该是固定值不应该每次生成
+          sn=`./redpill_tool_chain.sh sn ${{matrix.platform}} | grep 'Serial Number' | awk '{print $3}'`
+          sed -i -e "s/1234XXX123/${sn:="1130LWN123456"}/g" -e 's/XXYYXXYYXXYY/0011323D47F7/g' ${{matrix.platform}}_user_config.json
+          # 添加第二张网卡mac并设置网卡数量
+          sed -i -e 's/0011323D47F7"/&,\n\t"mac2": "0011323D47F8",\n\t"netif_num": 2/' ${{matrix.platform}}_user_config.json
+          # 调整synoinfo
+          sed -i -e 's/"synoinfo": {},/"synoinfo": {\n\t"maxlanport": "2"\n    },/' ${{matrix.platform}}_user_config.json
+          cat ${{matrix.platform}}_user_config.json
+      - name: 添加扩展驱动
+        if: matrix.platform != 'dva3221'
+        run: |
+          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json
+          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-acpid.json
+          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-virtio.json
+      - name: 添加扩展驱动[dva3221]
+        if: matrix.platform == 'dva3221'
+        run: |
+          echo '等待整理兼容性扩展~😀'
+          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json
+      - name: 添加 Misc shell
+        run: |
+          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-misc.json
+      - name: 添加 jumkey.dtb !!!Create your own device tree binary!!!
+        if: matrix.platform == 'ds920p' || matrix.platform == 'ds1621p' || matrix.platform == 'ds2422p'
+        run: |
+          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-dtb.json
+          echo '!!!Create your own device tree binary!!!'
+          echo 'see https://github.com/jumkey/redpill-load/blob/develop/redpill-dtb/README.md'
+      - name: 预处理PAT
+        if: endsWith(matrix.version, '42661') && startsWith(matrix.platform, 'ds361')
+        run: |
+          sed -i 's/debian:8-slim/debian:10-slim/g' global_config.json
+          ./redpill_tool_chain.sh build ${{matrix.platform}}-${{matrix.version}}
+          ./redpill_tool_chain.sh pat ${{matrix.platform}}-${{matrix.version}}
+          sed -i 's/debian:10-slim/debian:8-slim/g' global_config.json
+          ./redpill_tool_chain.sh build ${{matrix.platform}}-${{matrix.version}}
+      - name: 编译引导镜像
+        run: |
+          ./redpill_tool_chain.sh auto ${{matrix.platform}}-${{matrix.version}}
+      - name: 上传引导镜像到 github actions
+        uses: actions/upload-artifact@v3
+        with:
+          name: dsm-${{matrix.platform}}-${{matrix.version}}
+          path: images/redpill-*.img
+          if-no-files-found: error
+
+      - name: 删除旧的工作流
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          retain_days: 1
+          keep_minimum_runs: 3
