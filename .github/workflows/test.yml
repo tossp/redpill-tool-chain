@@ -122,6 +122,14 @@ jobs:
         run: |
           echo '等待整理兼容性扩展~😀'
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json
+          
+      - name: 添加扩展驱动[ds918p]
+        if: matrix.platform == 'ds918p'
+        run: |
+          echo '等待整理兼容性扩展~😀'
+         ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/mlx4_core/rpext-index.json
+         ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/r8125/rpext-index.json
+         ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/vmxnet3/rpext-index.json
 
       - name: 添加 Misc shell
         run: |
