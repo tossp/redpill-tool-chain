@@ -15,8 +15,10 @@ ARG DEBIAN_FRONTEND=noninteractive
 #     sed  -i "s/security.ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list && \
 #     sed  -i "s/deb.debian.org/mirrors.aliyun.com/g" /etc/apt/sources.list && \
 #     sed  -i "s/security.debian.org/mirrors.aliyun.com/g" /etc/apt/sources.list
-
-RUN apt-get update && apt-key update && \
+RUN if [ "debian:8" = "${DOCKER_BASE_IMAGE}" ]; then \
+        echo 'APT::Get::AllowUnauthenticated "true";' | tee /etc/apt/apt.conf.d/99disable-gpg-auth ;\
+    fi
+RUN apt-get update && \
     apt-get install --yes --no-install-recommends ca-certificates build-essential git libssl-dev curl cpio bspatch vim gettext bc bison flex dosfstools kmod && \
     rm -rf /var/lib/apt/lists/* /tmp/* && \
     curl --progress-bar --output /usr/bin/jq --location https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 && chmod +x /usr/bin/jq
