@@ -2,16 +2,16 @@
 root = true
 
 [*]
-end_of_line = lf
 charset = utf-8
+end_of_line = lf
 indent_style = space
 indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.ts]
-quote_type = single
-
 [*.md]
-max_line_length = off
+indent_style = tab
 trim_trailing_whitespace = false
+
+[{Makefile,**.mk}]
+indent_style = tab

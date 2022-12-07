@@ -1,38 +1,149 @@
 # RedPill Tool Chain
 
+[![构建](https://github.com/tossp/redpill-tool-chain/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/tossp/redpill-tool-chain/actions/workflows/test.yml)
+
 [中文说明](README.md "English")
 THX @haydibe
 
-# What is this?
+## Inofficial redpill toolchain image builder
 
-The redpill tool chain docker image builder is updated to v0.4:
+- Creates a OCI Container (~= Docker) image based tool chain.
+- Takes care of downloading (and caching) the required sources to compile redpill.ko and the required os packages that the build process depends on.
+- Caches .pat downloads inside the container on the host.
+- Configuration is done in the JSON file `global_config.json`; custom <platform_version> entries can be added underneath the `building_configs` block. Make sure the id is unique per block!
+- Supports a `user_config.json` per <platform_version>
+- Supports to bind a local redpill-lkm folder into the container (set `"docker.local_rp_lkm_use": "true"` and set `"docker.local_rp_lkm_path": "path/to/rp-lkm"`)
+- Supports to bind a local redpill-load folder into the container (set `"docker.local_rp_load_use": "true"` and set `"docker.local_rp_load_path": "path/to/rp-load"`)
+- Supports to clean old image versions and the build cache per <platform_version> or for `all` of them at once.
+- Supports to auto clean old image versions and the build cache for the current build image, set `"docker.auto_clean":`to `"true"`.
+- Allows to configure if the build cache is used or not ("docker.use_build_cache")
+- Allows to specify if "clean all" should delete all or only orphaned images.
+- The default `global_config.json` contains platform versions provided by the official redpill-load image. Please create new <platform_version> and point them to custom repositories if wanted.
+- Supports to add custom mounts (set`"docker.use_custom_bind_mounts":` to `"true"` and add your custom bind-mounts in `"docker.custom_bind_mounts"`).
+- Performs integrity check of required kernel/toolkit-dev required for the image build
+- Supports the make target to specify the redpill.ko build configuration. Set `<platform version>.redpill_lkm_make_target` to `dev-v6`, `dev-v7`, `test-v6`, `test-v7`, `prod-v6` or `prod-v7`.
+  Make sure to use the -v6 ones on DSM6 build and -v7 on DSM7 build. By default the targets `dev-v6` and `dev-v7` are used.
 
-- proper DSM7 support for apollolake (thnx @jumkey)
-- switched from kernel sources based build to toolkit dev based builds for DSM6.2.4 and DSM7.0 (thnx @jumkey) 
-- make targets for bromolow and apollolake merged: platform and version must be configure in the Makefile now
-- image is ~720-780MB instead of ~1.200-1.500MB now
+  - dev: all symbols included, debug messages included
+  - test: fully stripped with only warning & above (no debugs or info)
+  - prod: fully stripped with no debug messages
 
- 
-> PS: since toolkit dev lacks the required sources for fs/proc, they are taken from the extracted DSM6.2.4 kernel sources.
-The build requires the sources for this single folder, but does not use the kernel source to build the redpill.ko module. 
+## Changes
 
-If you see something is wrong in how the toolchain is build or have ideas how to make it better: please let me know.
+- added the additionaly required make target when building redpill.ko
+- added a new configuration item in `<platform version>.redpill_lkm_make_target` to set the build target
 
-For every other problem: please address it to the community - I don't know more than others do. 
+## Usage
 
-> PS2: before someone asks: I haven't managed a successfull installation/migration with the created bootloader so far. I am testing exclusivly on ESXi 6.7. The migration always stops at 56% and bails out with error 13.
+1. Edit `<platform>_user_config.json` that matches your <platform_version> according [redpill-load](https://github.com/RedPill-TTG/redpill-load) and place it in the same folder as redpill_tool_chain.sh
+2. Build the image for the platform and version you want:
+   `./redpill_tool_chain.sh build <platform_version>`
+3. Run the image for the platform and version you want:
+   `./redpill_tool_chain.sh auto <platform_version>`
 
- 
-# How to use it?
+You can always use `./redpill_tool_chain.sh run <platform_version>` to get a bash prompt, modify whatever you want and finaly execute `make -C /opt/build_all` to build the boot loader image.
+After step 3. the redpill load image should be build and can be found in the host folder "images".
 
-1. (on host) configure the Makefile and configure TARGET_PLATFORM (default: bromolow) and TARGET_VERSION (default: 6.2 - will build 6.2.4)
-1. (on host) create your own user_config.json or edit the USERCONFIG_* variables in the Makefile
-1. (on host) build image: make build_image
-1. (on host) run container: make  run_container
-1. (in container) build redpill.ko module and redpill bootloader image: make build_all
+Note1: run `./redpill_tool_chain.sh` to get the list of supported ids for the <platform_version> parameter.
+Note2: if `docker.use_local_rp_load` is set to `true`, the auto action will not pull latest redpill-load sources.
+Note3: Please do not ask to add <platform_version> with configurations for other redpill-load repositories.
 
-After running `make build_all` the created redpill bootloader image will be present in the ./image folder on the host.
- 
-Tested with hosts: Ubuntu 18.04 VM, Ubuntu 20.04 WSL2 and XPE  (the make binary to build on Synology/XPE can be found here)
+Feel free to modify any values in `global_config.json` that suite your needs!
 
-Dependencies: make and docker
+---
+⚠️⚠️⚠️
+Due to the complex environment of each version, the packaging strategy will change in detail. For details, please refer to the [workflow configuration file](https://github.com/tossp/redpill-tool-chain/blob/master/.github/workflows/test.yml)
+
+View the execution results in [Gtihub Actions](https://github.com/tossp/redpill-tool-chain/actions) and download the generated image.
+
+❗❗❗
+All extensions introduced in the [workflow configuration file](https://github.com/tossp/redpill-tool-chain/blob/master/.github/workflows/test.yml) are recommended and required
+
+---
+
+Examples:
+
+### See Help text
+
+```txt
+./redpill_tool_chain.sh
+Usage: ./redpill_tool_chain.sh <action> <platform version>
+
+Actions: build, auto, run, clean, add, del, sn, pat
+
+- build:    Build the toolchain image for the specified platform version.
+
+- auto:     Starts the toolchain container using the previosuly build toolchain image for the specified platform.
+            Updates redpill sources and builds the bootloader image automaticaly. Will end the container once done.
+
+- run:      Starts the toolchain container using the previously built toolchain image for the specified platform.
+            Interactive Bash terminal.
+
+- clean:    Removes old (=dangling) images and the build cache for a platform version.
+            Use ‘all’ as platform version to remove images and build caches for all platform versions.
+
+- add:      To install extension you need to know its index file location and nothing more.
+            eg: add 'https://example.com/some-extension/rpext-index.json'
+
+- del:      To remove an already installed extension you need to know its ID.
+            eg: del 'example_dev.some_extension'
+
+- sn:       Generates a serial number and mac address for the following platforms
+            DS3615xs DS3617xs DS916+ DS918+ DS920+ DS3622xs+ FS6400 DVA3219 DVA3221 DS1621+
+            eg: sn ds920p
+
+- pat:      For decoding PAT file. 
+
+Available platform versions:
+---------------------
+ds1621p-7.0.1-42218
+ds1621p-7.1.0-42661
+ds2422p-7.0.1-42218
+ds3615xs-6.2.4-25556
+ds3615xs-7.0.1-42218
+ds3615xs-7.1.0-42661
+ds3617xs-7.0.1-42218
+ds3617xs-7.1.0-42661
+ds3622xsp-7.0.1-42218
+ds3622xsp-7.1.0-42661
+ds918p-6.2.4-25556
+ds918p-7.0.1-42218
+ds918p-7.1.0-42661
+ds920p-7.0.1-42218
+ds920p-7.1.0-42661
+dva3221-7.0.1-42218
+dva3221-7.1.0-42661
+
+Custom Extensions:
+---------------------
+jumkey.acpid2
+thethorgroup.boot-wait
+thethorgroup.virtio
+
+Check global_settings.json for settings.
+```
+
+### Custom extended driver management
+
+- Install thethorgroup.virtio    : `./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-virtio/rpext-index.json`
+- Install thethorgroup.boot-wait : `./redpill_tool_chain.sh add https://github.com/jumkey/redpill-load/raw/develop/redpill-boot-wait/rpext-index.json`
+- Install pocopico.mpt3sas       : `./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/mpt3sas/rpext-index.json`
+- Remove pocopico.mpt3sas        : `./redpill_tool_chain.sh del pocopico.mpt3sas`
+
+[Get more extended drivers....](https://github.com/pocopico/rp-ext)
+
+### Build toolchain image
+
+- For Bromolow 6.2.4   : `./redpill_tool_chain.sh build ds3615xs-6.2.4-25556`
+- For Apollolake 7.0   : `./redpill_tool_chain.sh build ds918p-7.0-41890`
+
+### Create redpill bootloader image
+
+- For Bromolow 6.2.4   : `./redpill_tool_chain.sh auto ds3615xs-6.2.4-25556`
+- For Apollolake 7.0   : `./redpill_tool_chain.sh auto ds918p-7.0-41890`
+
+### Clean old redpill bootloader images and build cache
+
+- For Bromolow 6.2.4   : `./redpill_tool_chain.sh clean ds3615xs-6.2.4-25556`
+- For Apollolake 7.0   : `./redpill_tool_chain.sh clean ds918p-7.0-41890`
+- For all              : `./redpill_tool_chain.sh clean all`

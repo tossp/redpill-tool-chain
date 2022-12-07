@@ -1,0 +1,38 @@
+{
+  "id": "pocopico.r8125",
+  "url": "https://github.com/tossp/redpill-tool-chain/raw/master/extensions/pocopico-r8125.json",
+  "info": {
+    "name": "r8125",
+    "description": "Adds Realtek RTL8125 2.5Gigabit Ethernet driver Support",
+    "author_url": "https://github.com/pocopico",
+    "packer_url": "https://github.com/pocopico/rp-ext/tree/main/r8125",
+    "help_url": "<todo>"
+  },
+  "releases": {
+    "ds3615xs_25556": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds3615xs_25556.json",
+    "ds3615xs_41222": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds3615xs_41222.json",
+    "ds3615xs_42218": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds3615xs_42218.json",
+    "ds3615xs_42621": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds3615xs_42218.json",
+    "ds3615xs_42661": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds3615xs_42218.json",
+    "ds3617xs_42218": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds3617xs_42218.json",
+    "ds3617xs_42621": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds3617xs_42218.json",
+    "ds3617xs_42661": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds3617xs_42218.json",
+    "ds3622xsp_42218": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds3622xsp_42218.json",
+    "ds3622xsp_42621": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds3622xsp_42218.json",
+    "ds3622xsp_42661": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds3622xsp_42218.json",
+    "ds1621p_42218": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds1621p_42218.json",
+    "ds1621p_42621": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds1621p_42218.json",
+    "ds1621p_42661": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds1621p_42218.json",
+    "dva3221_42218": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/dva3221_42218.json",
+    "dva3221_42621": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/dva3221_42218.json",
+    "dva3221_42661": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/dva3221_42218.json",
+    "ds918p_25556": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds918p_25556.json",
+    "ds918p_41890": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds918p_41890.json",
+    "ds918p_42218": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds918p_42218.json",
+    "ds918p_42621": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds918p_42218.json",
+    "ds918p_42661": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds918p_42218.json",
+    "ds920p_42621": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds920p_42218.json",
+    "ds920p_42218": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds920p_42218.json",
+    "ds920p_42661": "https://github.com/pocopico/rp-ext/raw/main/r8125/releases/ds920p_42218.json"
+  }
+}
