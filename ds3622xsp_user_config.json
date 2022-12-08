@@ -1,9 +1,12 @@
 {
     "extra_cmdline": {
-        "pid": "0x0001",
-        "vid": "0x46f4",
-        "sn": "1234XXX123",
-        "mac1": "XXYYXXYYXXYY"
+        "pid": "0x0951",
+        "vid": "0x1666",
+        "sn": "2022NAS123456",
+        "mac1": "001132123456"
+        "mac2": "001132126528"
+        "mac3": "001132126538"
+        "mac4": "001132126558"
     },
     "synoinfo": {},
     "ramdisk_copy": {},
