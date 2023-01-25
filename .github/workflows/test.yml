@@ -56,7 +56,7 @@ jobs:
 
       - name: 配置引导镜像
         run: |
-          cp sample_user_config.json ${{matrix.platform}}_user_config.json
+          cp ds918p_user_config.json ${{matrix.platform}}_user_config.json
 
           # 调整VID和PID
           sed -i -e 's/0x0001/0x88AA/g' -e 's/0x46f4/0x88AA/g' ${{matrix.platform}}_user_config.json
