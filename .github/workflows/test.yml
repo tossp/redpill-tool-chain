@@ -5,7 +5,7 @@ on:
     inputs:
       clean_cache:
         description: 'Clear caches'
-        required: false
+#        required: false
         type: boolean
   push:
     branches:
