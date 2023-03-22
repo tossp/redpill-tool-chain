@@ -39,8 +39,8 @@ jobs:
           - platform: ds3615xs
             version: 7.1.0-42661
 
-#           - platform: ds3617xs
-#             version: 7.0.1-42218
+          - platform: ds3617xs
+            version: 7.0.1-42218
           - platform: ds3617xs
             version: 7.1.0-42661
 
@@ -100,7 +100,7 @@ jobs:
 
           # 调整SN和MAC,最好使用 actions secrets 引入,SN应该是固定值不应该每次生成
           sn=`./redpill_tool_chain.sh sn ${{matrix.platform}} | grep 'Serial Number' | awk '{print $3}'`
-          sed -i -e "s/1234XXX123/${sn:="1130LWN123456"}/g" -e 's/XXYYXXYYXXYY/0011323D47F7/g' ${{matrix.platform}}_user_config.json
+          sed -i -e "s/1234XXX123/${sn:="1130LWN123456"}/g" -e 's/XXYYXXYYXXYY/0011323D47F8/g' ${{matrix.platform}}_user_config.json
 
           # 添加第二张网卡mac并设置网卡数量
           sed -i -e 's/0011323D47F7"/&,\n\t"mac2": "0011323D47F8",\n\t"netif_num": 2/' ${{matrix.platform}}_user_config.json
@@ -116,6 +116,8 @@ jobs:
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-acpid.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-virtio.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/mpt3sas/rpext-index.json
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/mpt2sas/rpext-index.json
 
       - name: 添加扩展驱动[dva3221]
         if: matrix.platform == 'dva3221'
@@ -135,7 +137,7 @@ jobs:
           echo 'see https://github.com/jumkey/redpill-load/blob/develop/redpill-dtb/README.md'
 
       - name: 预处理PAT
-        if: endsWith(matrix.version, '42661') && startsWith(matrix.platform, 'ds361')
+        if: endsWith(matrix.version, '42629') && startsWith(matrix.platform, 'ds361')
         run: |
           sed -i 's/debian:8-slim/debian:10-slim/g' global_config.json
           ./redpill_tool_chain.sh build ${{matrix.platform}}-${{matrix.version}}
