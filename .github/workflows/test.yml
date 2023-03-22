@@ -37,12 +37,12 @@ jobs:
           - platform: ds3615xs
             version: 7.0.1-42218
           - platform: ds3615xs
-            version: 7.1.0-42661
+            version: 7.1.0-42962
 
           - platform: ds3617xs
             version: 7.0.1-42218
           - platform: ds3617xs
-            version: 7.1.0-42661
+            version: 7.1.0-42962
 
           - platform: ds3622xsp
             version: 7.0.1-42218
@@ -54,7 +54,7 @@ jobs:
           - platform: ds918p
             version: 7.0.1-42218
           - platform: ds918p
-            version: 7.1.0-42661
+            version: 7.1.0-42962
 
           - platform: ds920p
             version: 7.0.1-42218
@@ -141,7 +141,7 @@ jobs:
           echo 'see https://github.com/jumkey/redpill-load/blob/develop/redpill-dtb/README.md'
 
       - name: 预处理PAT
-        if: endsWith(matrix.version, '42661') && startsWith(matrix.platform, 'ds361')
+        if: endsWith(matrix.version, '42962') && startsWith(matrix.platform, 'ds361')
         run: |
           sed -i 's/debian:8-slim/debian:10-slim/g' global_config.json
           ./redpill_tool_chain.sh build ${{matrix.platform}}-${{matrix.version}}
