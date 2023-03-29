@@ -16,6 +16,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 #     sed  -i "s/deb.debian.org/mirrors.aliyun.com/g" /etc/apt/sources.list && \
 #     sed  -i "s/security.debian.org/mirrors.aliyun.com/g" /etc/apt/sources.list
 
+RUN cat /etc/os-release | grep -q 'jessie' && echo 'APT::Get::AllowUnauthenticated "true";' | tee /etc/apt/apt.conf.d/99disable-gpg-auth || true
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends ca-certificates build-essential git libssl-dev curl cpio bspatch vim gettext bc bison flex dosfstools kmod && \
     rm -rf /var/lib/apt/lists/* /tmp/* && \

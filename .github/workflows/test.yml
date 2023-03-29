@@ -39,8 +39,8 @@ jobs:
           - platform: ds3615xs
             version: 7.1.0-42661
 
-          - platform: ds3617xs
-            version: 7.0.1-42218
+#           - platform: ds3617xs
+#             version: 7.0.1-42218
           - platform: ds3617xs
             version: 7.1.0-42661
 
@@ -61,8 +61,8 @@ jobs:
           - platform: ds920p
             version: 7.1.0-42661
 
-          - platform: dva3221
-            version: 7.0.1-42218
+#           - platform: dva3221
+#             version: 7.0.1-42218
           - platform: dva3221
             version: 7.1.0-42661
 
