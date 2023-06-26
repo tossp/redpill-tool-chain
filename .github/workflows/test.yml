@@ -85,7 +85,7 @@ jobs:
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-virtio.json
           ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/e1000e/rpext-index.json
           ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/igb/rpext-index.json
-
+          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/jim3ma/synology-igc/master/igc/rpext-index.json 
       - name: 添加扩展驱动[dva3221]
         if: matrix.platform == 'dva3221'
         run: |
